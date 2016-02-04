@@ -1,11 +1,10 @@
 {
 	"name": "veams-component-slider",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"ignore": [
 		".bowerrc",
 		".gitignore",
-		"bower.json",
-		"README.md"
+		"bower.json"
 	],
 	"authors": [
 		{
