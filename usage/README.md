@@ -7,7 +7,7 @@ This component is based on the blueprint of Veams-Components.
 ### Include: Page
 
 ``` hbs
-{{! @INSERT :: START @id: slider, @tag: component }}
+{{! @INSERT :: START @id: slider, @tag: component-partial }}
 {{! wrapWith START: Slider }}
 {{#with slider-bp.simple}}
 	{{#wrapWith "c-slider"}}
@@ -29,7 +29,7 @@ This component is based on the blueprint of Veams-Components.
 ### Include: SCSS
 
 ``` scss
-// @INSERT :: START @id: scss-import, @tag: component
+// @INSERT :: START @id: scss-import
 @import "components/_c-slider";
 // @INSERT :: END
 ```
@@ -38,14 +38,14 @@ This component is based on the blueprint of Veams-Components.
 
 #### Import
 ``` js
-// @INSERT :: START @id: js-import, @tag: component
+// @INSERT :: START @id: js-import
 import Slider from './modules/slider/slider';
 // @INSERT :: END
 ```
 
 #### Initializing in Veams V2
 ``` js
-// @INSERT :: START @id: js-init-v2, @tag: component
+// @INSERT :: START @id: js-init-v2
 /**
  * Init Form
  */
@@ -59,7 +59,7 @@ Helpers.loadModule({
 
 #### Initializing in Veams V3
 ``` js
-// @INSERT :: START @id: js-init-v3, @tag: component
+// @INSERT :: START @id: js-init-v3
 /**
  * Init Form
  */
