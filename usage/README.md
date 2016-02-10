@@ -2,6 +2,18 @@
 
 This component is based on the blueprint of Veams-Components.
 
+## Requirements 
+
+### Handlebars
+- `veams-component-cta`
+
+### Sass
+- `_get-media.scss`
+
+### JavaScript
+- `App.currentMedia` functionality in Veams-JS
+- `App.EVENTS.resize` object in Veams-JS
+
 ## Usage
 
 ### Include: Page

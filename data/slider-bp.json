@@ -1,12 +1,12 @@
 {
 	"simple": {
-		"options": {
-			"sliderContextClass": "default",
-			"sliderClasses": "is-bg-highlight-1",
-			"sliderOptions": [
+		"sliderOptions": {
+			"contextClass": "default",
+			"classes": "is-bg-highlight-1",
+			"jsOptions": [
 				{
-					"sliderKey": "",
-					"sliderValue": ""
+					"jsKey": "",
+					"jsValue": ""
 				}
 			]
 		},

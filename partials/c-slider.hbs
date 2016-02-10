@@ -6,18 +6,18 @@ Requirements:
 - cta (only hbs)
 
 Options:
-- sliderContextClass {String} [default] - Just pass a string
-- sliderClasses {String} - Modifier classes
-- sliderOptions {Array} - Array with keys and values
-- sliderOptions.sliderKey {String} - Define a key (i.e. unresolvedClass)
-- sliderOptions.sliderValue {String} - Define a value (i.e. is-unresolved)
+- contextClass {String} [default] - Just pass a string
+- classes {String} - Modifier classes
+- jsOptions {Array} - Array with keys and values
+- jsOptions.jsKey {String} - Define a key (i.e. unresolvedClass)
+- jsOptions.jsValue {String} - Define a value (i.e. is-unresolved)
 
 Important Notes:
 This component is written as wrapWith template, so you have the possibility to place your custom content.
 
 --- }}
 
-<div class="c-slider{{#if options.sliderContextClass}}--{{options.sliderContextClass}}{{else}}--default{{/if}}{{#if options.sliderClasses}} {{options.sliderClasses}}{{/if}}" data-css="c-slider" data-js-module="slider"{{#if options.sliderOptions}} data-js-options='{ {{#each options.sliderOptions}}"{{options.sliderKey}}": "{{{options.sliderValue}}}"{{#if @last}}{{else}}, {{/if}}{{/each}} }'{{/if}}>
+<div class="c-slider{{#if options.contextClass}}--{{options.contextClass}}{{else}}--default{{/if}}{{#if options.classes}} {{options.classes}}{{/if}}" data-css="c-slider" data-js-module="slider"{{#if options.jsOptions}} data-js-options='{ {{#each options.jsOptions}}"{{options.jsKey}}": "{{{options.jsValue}}}"{{#if @last}}{{else}}, {{/if}}{{/each}} }'{{/if}}>
 
 	<div class="slider__actions" data-js-atom="slider-actions">
 		{{#each sliderCta}}

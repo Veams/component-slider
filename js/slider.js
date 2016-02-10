@@ -131,13 +131,18 @@ class Slider extends AppModule {
 		let showNext = this.showNextElement.bind(this);
 		let goTo = this.navigateToElement.bind(this);
 
-		// Global Events
-		App.Vent.on(App.EVENTS.resize, render);
-
 		// Local Events
 		this.$el.on(App.clickHandler, this.options.prev, showPrev);
 		this.$el.on(App.clickHandler, this.options.next, showNext);
 		this.$el.on(App.clickHandler, this.options.paginationItemClass, goTo);
+
+		// Global Events
+		if (!App.EVENTS && !App.EVENTS.resize) {
+			console.warn('App.EVENTS.resize is missing!');
+			return;
+		}
+
+		App.Vent.on(App.EVENTS.resize, render);
 	}
 
 	/**
@@ -153,6 +158,10 @@ class Slider extends AppModule {
 
 	// Renders the view's template to the UI
 	render() {
+		if (!App.currentMedia) {
+			console.warn('App.currentMedia is necessary to support the slider module!');
+			return;
+		}
 		this.visibles = this.options.visibleItems[App.currentMedia];
 		this.itemsLength = this.items.length;
 
