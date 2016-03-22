@@ -3,8 +3,6 @@
 This component is based on the blueprint of Veams-Components.
 
 ## Requirements 
-
-### Handlebars
 - `veams-component-cta`
 
 ### Sass
