@@ -1,3 +1,6 @@
+### v1.0.7
+- added global module registry
+
 ### v1.0.6
 - complete clean up to support error handling and better options integration
 

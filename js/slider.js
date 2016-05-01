@@ -1,7 +1,9 @@
 // Needs some love ...
 /**
  * Represents a responsive slider which can be used as ribbon.
- * @module slider
+ *
+ * @module Slider
+ * @version v1.0.7
  *
  * @author Sebastian Fitzner
  */
@@ -50,11 +52,24 @@ class Slider extends AppModule {
 		};
 
 		super(obj, options);
+		App.registerModule && App.registerModule(Slider.info, this.el);
 	}
 
 	/**
 	 * Custom getters and setter
 	 */
+
+	/**
+	 * Get module information
+	 */
+	static get info() {
+		return {
+			name: 'Slider',
+			version: '1.0.7',
+			vc: true,
+			mod: false // set to true if source was modified in project
+		};
+	}
 
 	/**
 	 * Get and set visible items.
