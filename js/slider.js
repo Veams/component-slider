@@ -1,17 +1,16 @@
-// Needs some love ...
 /**
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v1.0.7
+ * @version v1.1.0
  *
  * @author Sebastian Fitzner
+ * @author Andy Gutsche
  */
 
 import App from '../../app';
 import Helpers from '../../utils/helpers';
 import AppModule from '../_global/module';
-import ImageLoader from '../../utils/mixins/imageLoader';
 
 const $ = App.$;
 require('touchswipe')($);
@@ -31,6 +30,7 @@ class Slider extends AppModule {
 			unresolvedClass: 'is-unresolved',
 			activeClass: 'is-active',
 			hiddenClass: 'is-hidden',
+			cloneClass: 'is-cloned',
 			actions: '[data-js-atom="slider-actions"]', // Previous Button
 			prev: '[data-js-atom="slider-prev"]', // Previous Button
 			next: '[data-js-atom="slider-next"]', // Next Button
@@ -40,6 +40,10 @@ class Slider extends AppModule {
 			paginationItemClass: '.slider__pagination-list-item', // Define your class which we use in our mini tmpl
 			ribbon: '[data-js-atom="slider-ribbon"]',
 			wrapper: '[data-js-atom="slider-wrapper"]',
+			autoPlay: false,
+			autoPlayInterval: 3000,
+			infinite: true,
+			pauseOnHover: true,
 			startAtIndex: 0,
 			visibleItems: {
 				'desktop': 1,
@@ -65,9 +69,9 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-			version: '1.0.7',
+			version: '1.1.0',
 			vc: true,
-			mod: false // set to true if source was modified in project
+			mod: false
 		};
 	}
 
@@ -111,10 +115,36 @@ class Slider extends AppModule {
 	}
 
 	/**
+	 * Get paused property.
+	 *
+	 * @param {Boolean} bool - pause state
+	 */
+	get paused() {
+		return this._paused;
+	}
+
+	set paused(bool) {
+		this._paused = bool;
+	}
+
+	/**
+	 * Get autoPlay property.
+	 *
+	 * @param {Boolean} bool - autoplay state
+	 */
+	get autoPlay() {
+		return this._autoPlay;
+	}
+
+	set autoPlay(bool) {
+		this._autoPlay = bool;
+	}
+
+	/**
 	 * Get controls height.
 	 */
 	get controlHeight() {
-		return Helpers.getOuterHeight(this.prev);
+		return Helpers.getOuterHeight(this.$prev);
 	}
 
 	/**
@@ -122,17 +152,35 @@ class Slider extends AppModule {
 	 */
 	initialize() {
 		this.index = 0;
-		this.prev = this.$el.find(this.options.prev);
-		this.next = this.$el.find(this.options.next);
-		this.actions = this.$el.find(this.options.actions);
-		this.items = this.$el.find(this.options.items);
-		this.wrapper = this.$el.find(this.options.wrapper);
-		this.ribbon = this.$el.find(this.options.ribbon);
-		this.pagination = this.$el.find(this.options.pagination);
-		this.paginationList = this.$el.find(this.options.paginationList);
+		this.$prev = this.$el.find(this.options.prev);
+		this.$next = this.$el.find(this.options.next);
+		this.$items = this.$el.find(this.options.items);
+		this.$initialItems = this.$items;
+		this.$wrapper = this.$el.find(this.options.wrapper);
+		this.$ribbon = this.$el.find(this.options.ribbon);
+		this.transition = this.$ribbon.css('transition');
+		this.$paginationList = this.$el.find(this.options.paginationList);
 		this.startAtIndex = ~~this.options.startAtIndex;
+		this.$lastItem = this.$items.eq(this.$items.length - 1);
+		this.$firstItem = this.$items.eq(0);
+		this.clickHandler = true;
+		this.autoPlay = this.options.autoPlay && this.options.infinite;
 
-		this.$el.removeClass(this.options.unresolvedClass);
+		if (this.options.autoPlay && !this.options.infinite) {
+			console.warn('Slider: Sorry - option "autoPlay" has no effect while option "infinite" is set to false!');
+		}
+
+		if (this.options.infinite) {
+
+			for (let item in this.options.visibleItems) {
+				if (this.options.visibleItems.hasOwnProperty(item)) {
+					if (this.options.visibleItems[item] > 1) {
+						console.warn('Slider: Sorry - option "visibleItems" has no effect while option "infinite" is set to true!');
+						break;
+					}
+				}
+			}
+		}
 
 		super.initialize();
 	}
@@ -145,6 +193,8 @@ class Slider extends AppModule {
 		let showPrev = this.showPrevElement.bind(this);
 		let showNext = this.showNextElement.bind(this);
 		let goTo = this.navigateToElement.bind(this);
+		let play = this.play.bind(this);
+		let pause = this.pause.bind(this);
 
 		// Local Events
 		this.$el.on(App.clickHandler, this.options.prev, showPrev);
@@ -153,11 +203,21 @@ class Slider extends AppModule {
 
 		// Global Events
 		if (!App.EVENTS && !App.EVENTS.resize) {
-			console.warn('App.EVENTS.resize is missing!');
+			console.warn('Slider: App.EVENTS.resize is missing!');
 			return;
 		}
 
 		App.Vent.on(App.EVENTS.resize, render);
+
+		if (this.autoPlay && this.options.pauseOnHover) {
+
+			if (App.EVENTS.mouseEnter && App.EVENTS.mouseLeave) {
+				this.$el.on(App.EVENTS.mouseEnter, pause);
+				this.$el.on(App.EVENTS.mouseLeave, play);
+			} else {
+				console.warn('Slider: App.EVENTS.mouseEnter and/or App.EVENTS.mouseLeave missing - option "pauseOnHover" will be ignored!');
+			}
+		}
 	}
 
 	/**
@@ -171,21 +231,157 @@ class Slider extends AppModule {
 		this.$el.off(App.clickHandler);
 	}
 
-	// Renders the view's template to the UI
+	/**
+	 * Bind transition events
+	 *
+	 */
+	bindTransitions() {
+		let onRibbonTransitionEnd = this.onRibbonTransitionEnd.bind(this);
+		let onItemsTransitionEnd = this.onItemsTransitionEnd.bind(this);
+
+		this.$ribbon.on(Helpers.transitionEndEvent(), onRibbonTransitionEnd);
+		this.$items.on(Helpers.transitionEndEvent(), onItemsTransitionEnd);
+	}
+
+	/**
+	 * React to transitionend on ribbon
+	 *
+	 * @param {Object} e - Event object.
+	 */
+	onRibbonTransitionEnd(e) {
+		e.stopPropagation();
+
+		if (this.autoPlay && this.paused) {
+
+			if (this.options.pauseOnHover) {
+
+				if (!this.$el.is(':hover')) {
+					this.play();
+				}
+			}
+			else {
+				this.play();
+			}
+		}
+
+
+		if (this.$clonedFirst && this.$clonedFirst.hasClass(this.options.activeClass)) {
+			this.$clonedFirst.removeClass(this.options.activeClass);
+			this.index = 1;
+
+			this.animateSlide({
+				idx: this.index,
+				animate: false
+			});
+		}
+
+		if (this.$clonedLast && this.$clonedLast.hasClass(this.options.activeClass)) {
+			this.$clonedLast.removeClass(this.options.activeClass);
+			this.index = this.$items.length - this.visibles - 1;
+
+			this.animateSlide({
+				idx: this.index,
+				animate: false
+			});
+		}
+
+		this.clickHandler = true;
+	}
+
+
+	/**
+	 * React to transitionend on items
+	 *
+	 * @param {Object} e - Event object.
+	 */
+	onItemsTransitionEnd(e) {
+		e.stopPropagation();
+	}
+
+
+	/**
+	 * Renders the view's template to the UI
+	 */
 	render() {
 		if (!App.currentMedia) {
-			console.warn('App.currentMedia is necessary to support the slider module!');
+			console.warn('Slider: App.currentMedia is necessary to support the slider module!');
 			return;
 		}
-		this.visibles = this.options.visibleItems[App.currentMedia];
-		this.itemsLength = this.items.length;
+
+		if (this.$clonedLast && this.$clonedFirst) {
+			this.$clonedLast.remove();
+			this.$clonedFirst.remove();
+			this.$items = this.$initialItems;
+		}
+
+		this.visibles = this.options.infinite ? 1 : this.options.visibleItems[App.currentMedia];
+		this.itemsLength = this.$items.length;
 
 		this.handleVisibility();
 		this.removePagination();
 		this.addPagination();
+
+		if (this.options.infinite) {
+			this.infiniteLoop();
+		}
+
+		this.bindTransitions();
 		this.getAndSetDimensions();
 		this.bindSwipes();
-		this.goToItem(this.startAtIndex);
+
+		if (this.options.infinite) {
+			this.goToItem(this.startAtIndex + this.visibles);
+		}
+		else {
+			this.goToItem(this.startAtIndex);
+		}
+
+		if (this.autoPlay && this.paused) {
+			this.play();
+		}
+	}
+
+	/**
+	 * Clone first and last element
+	 *
+	 */
+	infiniteLoop() {
+		this.$clonedFirst = this.$firstItem.clone(true).addClass(this.options.cloneClass);
+		this.$clonedLast = this.$lastItem.clone(true).addClass(this.options.cloneClass);
+
+		this.$firstItem.before(this.$clonedLast);
+		this.$lastItem.after(this.$clonedFirst);
+
+		this.$items = $(this.options.items, this.$el);
+	}
+
+	/**
+	 * Animate slide
+	 *
+	 * @param {Object} obj - animation property object.
+	 */
+	animateSlide(obj) {
+		if (!obj.animate) {
+			this.$ribbon.css('transition', 'none');
+		} else {
+			this.$ribbon.css('transition', this.transition);
+		}
+
+		this.$ribbon.css('left', -obj.idx * (this.thumbWidth));
+	}
+
+	/**
+	 * Check first/last slide classes
+	 *
+	 */
+	checkSlides() {
+
+		if (this.$clonedFirst.hasClass(this.options.activeClass)) {
+			this.$firstItem.addClass(this.options.activeClass);
+		}
+		if (this.$clonedLast.hasClass(this.options.activeClass)) {
+			this.$lastItem.addClass(this.options.activeClass);
+		}
 	}
 
 	/**
@@ -194,7 +390,7 @@ class Slider extends AppModule {
 	handleVisibility() {
 		if (this.itemsLength === 0) {
 			this.$el.addClass(this.options.hiddenClass);
-			console.warn('There is no item we can use in our slider :(');
+			console.warn('Slider: There is no item we can use in our slider :(');
 		}
 
 		this.$el.css('max-width', 'none');
@@ -204,7 +400,7 @@ class Slider extends AppModule {
 	 * Empty pagination.
 	 */
 	removePagination() {
-		this.paginationList.empty();
+		this.$paginationList.empty();
 	}
 
 	/**
@@ -214,12 +410,13 @@ class Slider extends AppModule {
 	addPagination() {
 		let paginationItem = 'data-js-atom="slider-pagination-item"';
 		let paginationItemClass = 'slider__pagination-list-item';
-		let tmpl = this.items.map(function (i) {
+
+		let tmpl = this.$items.map((i) => {
 			return $('<li class="' + paginationItemClass + '" ' + paginationItem + '><strong>' + (i + 1) + '</strong></li>')[0];
 		});
 
-		this.paginationList.append(tmpl);
-		this.paginationItems = $('[' + paginationItem + ']', this.$el);
+		this.$paginationList.append(tmpl);
+		this.$paginationItems = $('[' + paginationItem + ']', this.$el);
 	}
 
 	/**
@@ -232,6 +429,10 @@ class Slider extends AppModule {
 
 		this.index = $(e.currentTarget).index();
 
+		if (this.options.infinite) {
+			this.index++;
+		}
+
 		this.goToItem(this.index);
 	}
 
@@ -243,7 +444,11 @@ class Slider extends AppModule {
 	showNextElement(e) {
 		e.preventDefault();
 
-		this.goToItem(this.index + this.visibles);
+		if (this.clickHandler) {
+			this.goToItem(this.index + this.visibles);
+		}
+
+		this.clickHandler = false;
 	}
 
 	/**
@@ -254,7 +459,11 @@ class Slider extends AppModule {
 	showPrevElement(e) {
 		e.preventDefault();
 
-		this.goToItem(this.index - this.visibles);
+		if (this.clickHandler) {
+			this.goToItem(this.index - this.visibles);
+		}
+
+		this.clickHandler = false;
 	}
 
 	/**
@@ -270,9 +479,9 @@ class Slider extends AppModule {
 	 * Bind all swipe gestures.
 	 */
 	bindSwipes() {
-		var _this = this;
+		let _this = this;
 
-		if (this.items.length > this.visibles) {
+		if (this.$items.length > this.visibles) {
 			this.$el.swipe({
 				swipeLeft: function () {
 					_this.goToItem(_this.index + _this.visibles);
@@ -287,30 +496,123 @@ class Slider extends AppModule {
 	}
 
 	/**
+	 * Enables button
+	 *
+	 * @param {Object} $btn - button element.
+	 */
+	enableBtn($btn) {
+		$btn.removeClass(this.options.hiddenClass);
+		$btn.removeAttr('disabled');
+		$btn.removeAttr('aria-disabled');
+	}
+
+	/**
+	 * Disables button
+	 *
+	 * @param {Object} $btn - button element.
+	 */
+	disableBtn($btn) {
+		$btn.addClass(this.options.hiddenClass);
+		$btn.attr('disabled', 'disabled');
+		$btn.attr('aria-disabled', true);
+	}
+
+	/**
 	 * Handles the method to go to a specific item.
 	 * Further we handle the class
 	 *
 	 * @param {number} i - Index number.
 	 */
 	goToItem(i) {
-		let maxIndex = this.items.length - this.visibles;
+		let maxIndex = this.$items.length - this.visibles;
 
-		if (i < 0) {
-			i = maxIndex;
-		} else if (i > maxIndex) {
-			i = 0;
+		if (!this.paused) {
+			this.pause();
 		}
 
-		this.ribbon.css('left', -i * (this.thumbWidth));
+		if (this.options.infinite) {
+			if (i < 0) {
+				i = maxIndex;
+			} else if (i > maxIndex) {
+				i = 0;
+			}
+		}
+		else {
+			this.enableBtn(this.$prev);
+			this.enableBtn(this.$next);
+
+			if (i < 1) {
+				this.disableBtn(this.$prev);
+
+				if (i < 0) {
+					i = 0;
+				}
+			} else if (i > maxIndex - 1) {
+				this.disableBtn(this.$next);
+
+				if (i > maxIndex) {
+					i = maxIndex;
+				}
+			}
+		}
+
+		this.animateSlide({
+			idx: i,
+			animate: !this.$el.hasClass(this.options.unresolvedClass)
+		});
+
+		if (this.$el.hasClass(this.options.unresolvedClass)) {
+			this.$el.removeClass(this.options.unresolvedClass);
+		}
+
 		this.index = i;
 
-		this.items.removeClass(this.options.activeClass);
-		this.paginationItems.removeClass(this.options.activeClass);
+		this.$items.removeClass(this.options.activeClass);
+		this.$paginationItems.removeClass(this.options.activeClass);
 
-		for (let idx = this.index; idx < this.index + this.visibles; idx++) {
-			this.items.eq(idx).addClass(this.options.activeClass);
-			this.paginationItems.eq(idx).addClass(this.options.activeClass);
+		if (!this.options.infinite) {
+			for (let idx = this.index; idx < this.index + this.visibles; idx++) {
+				this.$items.eq(idx).addClass(this.options.activeClass);
+				this.$paginationItems.eq(idx).addClass(this.options.activeClass);
+			}
 		}
+		else {
+			for (let idx = this.index - 1; idx < this.index - 1 + this.visibles; idx++) {
+				let slideIdx = idx;
+				this.$items.eq(slideIdx + 1).addClass(this.options.activeClass);
+
+				if (idx >= this.$paginationItems.length) {
+					slideIdx = 0;
+				}
+
+				this.$paginationItems.eq(slideIdx).addClass(this.options.activeClass);
+			}
+		}
+
+		if (this.options.infinite) {
+			this.checkSlides();
+		}
+	}
+
+	/**
+	 * Start autoplay.
+	 */
+	play() {
+		clearInterval(this.autoPlayInterval);
+
+		this.autoPlayInterval = setInterval(() => {
+			this.goToItem(this.index + this.visibles);
+		}, this.options.autoPlayInterval);
+
+		this.paused = false;
+	}
+
+	/**
+	 * Pause autoplay.
+	 */
+	pause() {
+		clearInterval(this.autoPlayInterval);
+		this.paused = true;
 	}
 
 	/**
@@ -319,10 +621,10 @@ class Slider extends AppModule {
 	getAndSetDimensions() {
 		this.width = this.$el.outerWidth();
 		this.thumbWidth = this.width / this.visibles;
-		this.wrapper.css('width', this.width);
-		this.items.css('width', this.thumbWidth);
+		this.$wrapper.css('width', this.width);
+		this.$items.css('width', this.thumbWidth);
 
-		this.ribbon.css({
+		this.$ribbon.css({
 			'width': this.getRibbonWidth()
 		});
 	}
@@ -331,12 +633,12 @@ class Slider extends AppModule {
 	 * Get ribbon width.
 	 */
 	getRibbonWidth() {
-		var width;
+		let width;
 
-		if (this.items.length <= this.visibles) {
-			width = this.items.length * (this.thumbWidth);
+		if (this.$items.length <= this.visibles) {
+			width = this.$items.length * (this.thumbWidth);
 		} else {
-			width = this.items.length * (this.thumbWidth);
+			width = this.$items.length * (this.thumbWidth);
 		}
 
 		return width;

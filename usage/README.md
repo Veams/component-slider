@@ -11,8 +11,42 @@ This component is based on the blueprint of Veams-Components.
 ### JavaScript
 - `App.currentMedia` functionality in Veams-JS
 - `App.EVENTS.resize` object in Veams-JS
+- `App.EVENTS.mouseenter` object in Veams-JS
+- `App.EVENTS.mouseleave` object in Veams-JS
 
 ## Usage
+
+### Options:
+
+#### autoPlay
+`Type: boolean` | `Default: false`
+
+Enables autoplay
+
+#### autoPlayInterval
+`Type: integer` | `Default: 3000`
+
+Autoplay Speed in milliseconds
+
+#### infinite
+`Type: boolean` | `Default: true`
+
+Infinite loop sliding
+
+#### pauseOnHover
+`Type: boolean` | `Default: true`
+
+Pause Autoplay On Hover
+
+#### startAtIndex
+`Type: integer` | `Default: 0`
+
+Slide to start on
+
+#### visibleItems
+`Type: object` | `Default: none`
+
+Object containing breakpoints. Determines visible items at given screen width
 
 ### Include: Page
 
@@ -71,7 +105,7 @@ Helpers.loadModule({
 ``` js
 // @INSERT :: START @tag: js-init-v3   
 /**
- * Init Form
+ * Init Slider
  */
 Helpers.loadModule({
 	domName: 'slider',
