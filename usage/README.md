@@ -91,7 +91,7 @@ import Slider from './modules/slider/slider';
 ``` js
 // @INSERT :: START @tag: js-init-v2  
 /**
- * Init Form
+ * Init Slider
  */
 Helpers.loadModule({
 	el: '[data-js-module="slider"]',
