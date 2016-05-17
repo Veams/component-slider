@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v1.1.1
+ * @version v1.1.2
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -69,7 +69,7 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-			version: '1.1.0',
+			version: '1.1.2',
 			vc: true,
 			mod: false
 		};

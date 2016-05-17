@@ -1,3 +1,6 @@
+### v1.1.2
+- update module version number
+
 ### v1.1.1
 - #1: refactor wrapWith options in partial
 - update section 'Include: Page' in README.md
