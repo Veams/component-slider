@@ -54,7 +54,7 @@ Object containing breakpoints. Determines visible items at given screen width
 {{! @INSERT :: START @id: slider, @tag: component-partial }}
 {{! wrapWith START: Slider }}
 {{#with slider-bp.simple}}
-	{{#wrapWith "c-slider"}}
+	{{#wrapWith "c-slider" data=this.sliderOptions}}
 		{{#wrapWith "c-slider__item"}}
 			<img src="https://placeholdit.imgix.net/~text?txtsize=92&txt=980%C3%97600&w=980&h=600" alt="test">
 		{{/wrapWith}}

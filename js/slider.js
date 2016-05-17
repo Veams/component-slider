@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v1.1.0
+ * @version v1.1.1
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche

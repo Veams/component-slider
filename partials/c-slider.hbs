@@ -17,7 +17,7 @@ This component is written as wrapWith template, so you have the possibility to p
 
 --- }}
 
-<div class="c-slider{{#if options.contextClass}}--{{options.contextClass}}{{else}}--default{{/if}}{{#if options.classes}} {{options.classes}}{{/if}}" data-css="c-slider" data-js-module="slider"{{#if options.jsOptions}} data-js-options='{ {{#each options.jsOptions}}"{{options.jsKey}}": "{{{options.jsValue}}}"{{#if @last}}{{else}}, {{/if}}{{/each}} }'{{/if}}>
+<div class="c-slider{{#if options.data.contextClass}}--{{options.data.contextClass}}{{else}}--default{{/if}}{{#if options.data.classes}} {{options.data.classes}}{{/if}}" data-css="c-slider" data-js-module="slider"{{#if options.data.jsOptions}} data-js-options='{ {{#each options.data.jsOptions}}"{{jsKey}}": {{#unless jsObject}}"{{/unless}}{{{jsValue}}}{{#unless jsObject}}"{{/unless}}{{#if @last}}{{else}}, {{/if}}{{/each}} }'{{/if}}>
 
 	<div class="slider__actions" data-js-atom="slider-actions">
 		{{#each sliderCta}}
