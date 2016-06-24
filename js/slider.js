@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v1.1.2
+ * @version v1.1.3
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -13,7 +13,7 @@ import Helpers from '../../utils/helpers';
 import AppModule from '../_global/module';
 
 const $ = App.$;
-require('touchswipe')($);
+require('jquery-touchswipe')($);
 
 class Slider extends AppModule {
 	/**
@@ -69,7 +69,7 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-			version: '1.1.2',
+			version: '1.1.3',
 			vc: true,
 			mod: false
 		};

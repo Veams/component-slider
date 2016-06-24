@@ -2,7 +2,8 @@
 
 This component is based on the blueprint of Veams-Components.
 
-## Requirements 
+## Requirements
+- `jquery-touchswipe`
 - `veams-component-cta`
 
 ### Sass

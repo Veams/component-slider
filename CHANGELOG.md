@@ -1,3 +1,6 @@
+### v1.1.3
+- use jquery-touchswipe instead of touchswipe
+
 ### v1.1.2
 - update module version number
 
