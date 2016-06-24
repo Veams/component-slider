@@ -1,4 +1,4 @@
-### v1.1.3
+### v1.1.4
 - use jquery-touchswipe instead of touchswipe
 
 ### v1.1.2
