@@ -10,10 +10,11 @@ This component is based on the blueprint of Veams-Components.
 - `_get-media.scss`
 
 ### JavaScript
-- `App.currentMedia` functionality in Veams-JS
-- `App.EVENTS.resize` object in Veams-JS
-- `App.EVENTS.mouseenter` object in Veams-JS
-- `App.EVENTS.mouseleave` object in Veams-JS
+- `App.currentMedia` property in Veams-JS
+- `App.EVENTS.click` event in Veams-JS
+- `App.EVENTS.resize` event in Veams-JS
+- `App.EVENTS.mouseenter` event in Veams-JS
+- `App.EVENTS.mouseleave` event in Veams-JS
 
 ## Usage
 
@@ -32,7 +33,7 @@ Autoplay Speed in milliseconds
 #### enableTouchSwipe
 `Type: boolean` | `Default: true`
 
-Enable support for swipe gestures
+Enable support for swipe gestures on touch devices
 
 #### infinite
 `Type: boolean` | `Default: true`
@@ -48,6 +49,11 @@ Pause Autoplay On Hover
 `Type: integer` | `Default: 0`
 
 Slide to start on
+
+#### triggerTouchSwipeClick
+`Type: boolean` | `Default: false`
+
+Trigger click on swipeable elements
 
 #### visibleItems
 `Type: object` | `Default: none`

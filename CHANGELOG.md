@@ -1,3 +1,6 @@
+### v1.1.7
+- add option 'triggerTouchSwipeClick'
+
 ### v1.1.6
 - add option 'enableTouchSwipe'
 
