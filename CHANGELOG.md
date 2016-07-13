@@ -1,3 +1,6 @@
+### v1.1.6
+- add option 'enableTouchSwipe'
+
 ### v1.1.5
 - fix initial button states (next/prev)
 

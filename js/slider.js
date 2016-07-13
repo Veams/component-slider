@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v1.1.5
+ * @version v1.1.6
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -42,6 +42,7 @@ class Slider extends AppModule {
 			wrapper: '[data-js-atom="slider-wrapper"]',
 			autoPlay: false,
 			autoPlayInterval: 3000,
+			enableTouchSwipe: true,
 			infinite: true,
 			pauseOnHover: true,
 			startAtIndex: 0,
@@ -69,7 +70,7 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-			version: '1.1.5',
+			version: '1.1.6',
 			vc: true,
 			mod: false
 		};
@@ -327,7 +328,10 @@ class Slider extends AppModule {
 
 		this.bindTransitions();
 		this.getAndSetDimensions();
-		this.bindSwipes();
+
+		if (this.options.enableTouchSwipe) {
+			this.bindSwipes();
+		}
 
 		if (this.options.infinite) {
 			this.goToItem(this.startAtIndex + this.visibles);

@@ -29,6 +29,11 @@ Enables autoplay
 
 Autoplay Speed in milliseconds
 
+#### enableTouchSwipe
+`Type: boolean` | `Default: true`
+
+Enable support for swipe gestures
+
 #### infinite
 `Type: boolean` | `Default: true`
 
