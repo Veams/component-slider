@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v1.1.4
+ * @version v1.1.5
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -69,7 +69,7 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-			version: '1.1.4',
+			version: '1.1.5',
 			vc: true,
 			mod: false
 		};
@@ -547,7 +547,9 @@ class Slider extends AppModule {
 				if (i < 0) {
 					i = 0;
 				}
-			} else if (i > maxIndex - 1) {
+			}
+
+			if (i > maxIndex - 1) {
 				this.disableBtn(this.$next);
 
 				if (i > maxIndex) {

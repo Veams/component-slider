@@ -1,3 +1,6 @@
+### v1.1.5
+- fix initial button states (next/prev)
+
 ### v1.1.4
 - use jquery-touchswipe instead of touchswipe
 
