@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v1.2.1
+ * @version v1.3.0
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -41,6 +41,7 @@ class Slider extends AppModule {
 			wrapper: '[data-js-atom="slider-wrapper"]',
 			autoPlay: false,
 			autoPlayInterval: 3000,
+			disablePagination: false,
 			enableTouchSwipe: true,
 			infinite: true,
 			pauseOnHover: true,
@@ -69,7 +70,7 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-			version: '1.2.1',
+			version: '1.3.0',
 			vc: true,
 			mod: false
 		};
@@ -158,19 +159,24 @@ class Slider extends AppModule {
 		this.$initialItems = this.$items;
 		this.$wrapper = this.$el.find(this.options.wrapper);
 		this.$ribbon = this.$el.find(this.options.ribbon);
-		this.transition = this.$ribbon.css('transition');
-		this.$paginationList = this.$el.find(this.options.paginationList);
 		this.startAtIndex = ~~this.options.startAtIndex;
 		this.$lastItem = this.$items.eq(this.$items.length - 1);
 		this.$firstItem = this.$items.eq(0);
+		this.transition = this.$ribbon.css('transition');
+		this.paginationDisabled = this.options.disablePagination || this.$items.length < 2;
+		this.infinite = this.options.infinite && this.$items.length > 1;
 		this.clickHandler = true;
-		this.autoPlay = this.options.autoPlay && this.options.infinite;
+		this.autoPlay = this.options.autoPlay && this.infinite;
 
-		if (this.options.autoPlay && !this.options.infinite) {
+		if (!this.paginationDisabled) {
+			this.$paginationList = this.$el.find(this.options.paginationList);
+		}
+
+		if (this.options.autoPlay && !this.infinite) {
 			console.warn('Slider: Sorry - option "autoPlay" has no effect while option "infinite" is set to false!');
 		}
 
-		if (this.options.infinite) {
+		if (this.infinite) {
 
 			for (let item in this.options.visibleItems) {
 				if (this.options.visibleItems.hasOwnProperty(item)) {
@@ -314,14 +320,17 @@ class Slider extends AppModule {
 			this.$items = this.$initialItems;
 		}
 
-		this.visibles = this.options.infinite ? 1 : this.options.visibleItems[App.currentMedia];
+		this.visibles = this.infinite ? 1 : this.options.visibleItems[App.currentMedia];
 		this.itemsLength = this.$items.length;
 
 		this.handleVisibility();
-		this.removePagination();
-		this.addPagination();
 
-		if (this.options.infinite) {
+		if (!this.paginationDisabled) {
+			this.removePagination();
+			this.addPagination();
+		}
+
+		if (this.infinite) {
 			this.infiniteLoop();
 		}
 
@@ -332,7 +341,7 @@ class Slider extends AppModule {
 			this.bindSwipes();
 		}
 
-		if (this.options.infinite) {
+		if (this.infinite) {
 			this.goToItem(this.startAtIndex + this.visibles);
 		}
 		else {
@@ -432,7 +441,7 @@ class Slider extends AppModule {
 
 		this.index = $(e.currentTarget).index();
 
-		if (this.options.infinite) {
+		if (this.infinite) {
 			this.index++;
 		}
 
@@ -539,7 +548,7 @@ class Slider extends AppModule {
 			this.pause();
 		}
 
-		if (this.options.infinite) {
+		if (this.infinite) {
 			if (i < 0) {
 				i = maxIndex;
 			} else if (i > maxIndex) {
@@ -579,12 +588,18 @@ class Slider extends AppModule {
 		this.index = i;
 
 		this.$items.removeClass(this.options.activeClass);
-		this.$paginationItems.removeClass(this.options.activeClass);
 
-		if (!this.options.infinite) {
+		if (!this.paginationDisabled && this.$paginationItems && this.$paginationItems.length) {
+			this.$paginationItems.removeClass(this.options.activeClass);
+		}
+
+		if (!this.infinite) {
 			for (let idx = this.index; idx < this.index + this.visibles; idx++) {
 				this.$items.eq(idx).addClass(this.options.activeClass);
-				this.$paginationItems.eq(idx).addClass(this.options.activeClass);
+
+				if (!this.paginationDisabled) {
+					this.$paginationItems.eq(idx).addClass(this.options.activeClass);
+				}
 			}
 		}
 		else {
@@ -592,15 +607,17 @@ class Slider extends AppModule {
 				let slideIdx = idx;
 				this.$items.eq(slideIdx + 1).addClass(this.options.activeClass);
 
-				if (idx >= this.$paginationItems.length) {
-					slideIdx = 0;
-				}
+				if (!this.paginationDisabled) {
+					if (idx >= this.$paginationItems.length) {
+						slideIdx = 0;
+					}
 
-				this.$paginationItems.eq(slideIdx).addClass(this.options.activeClass);
+					this.$paginationItems.eq(slideIdx).addClass(this.options.activeClass);
+				}
 			}
 		}
 
-		if (this.options.infinite) {
+		if (this.infinite) {
 			this.checkSlides();
 		}
 	}

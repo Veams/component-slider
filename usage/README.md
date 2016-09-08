@@ -18,12 +18,17 @@ This component is based on the blueprint of Veams-Components.
 #### autoPlay
 `Type: boolean` | `Default: false`
 
-Enables autoplay
+Enable autoplay
 
 #### autoPlayInterval
 `Type: integer` | `Default: 3000`
 
 Autoplay Speed in milliseconds
+
+#### disablePagination
+`Type: boolean` | `Default: false`
+
+Disable pagination
 
 #### enableTouchSwipe
 `Type: boolean` | `Default: true`

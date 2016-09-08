@@ -1,3 +1,7 @@
+### v1.3.0
+- hide pagination and controls if slide count < 2
+- add option 'disablePagination'
+
 ### v1.2.1
 - prevent negative maxIndex
 
