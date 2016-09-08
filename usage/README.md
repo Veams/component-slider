@@ -9,7 +9,7 @@ This component is based on the blueprint of Veams-Components.
 - `_get-media.scss`
 
 ### JavaScript
-- `Veams-JS`
+- `Veams-JS >= v3.4.0`
 
 ## Usage
 
