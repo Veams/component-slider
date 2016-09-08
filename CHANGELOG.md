@@ -1,3 +1,6 @@
+### v1.2.1
+- prevent negative maxIndex
+
 ### v1.2.0
 - use Helpers.detectSwipe instead of jquery-touchswipe
 

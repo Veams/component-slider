@@ -531,6 +531,10 @@ class Slider extends AppModule {
 	goToItem(i) {
 		let maxIndex = this.$items.length - this.visibles;
 
+		if (maxIndex < 0) {
+			maxIndex = 0;
+		}
+
 		if (!this.paused) {
 			this.pause();
 		}
