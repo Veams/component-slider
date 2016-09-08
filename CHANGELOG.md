@@ -1,3 +1,6 @@
+### v1.2.0
+- use Helpers.detectSwipe instead of jquery-touchswipe
+
 ### v1.1.7
 - add option 'triggerTouchSwipeClick'
 

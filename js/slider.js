@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v1.1.7
+ * @version v1.2.0
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -13,7 +13,6 @@ import Helpers from '../../utils/helpers';
 import AppModule from '../_global/module';
 
 const $ = App.$;
-require('jquery-touchswipe')($);
 
 class Slider extends AppModule {
 	/**
@@ -46,7 +45,6 @@ class Slider extends AppModule {
 			infinite: true,
 			pauseOnHover: true,
 			startAtIndex: 0,
-			triggerTouchSwipeClick: false,
 			visibleItems: {
 				'desktop': 1,
 				'tablet-large': 1,
@@ -71,7 +69,7 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-			version: '1.1.7',
+			version: '1.2.0',
 			vc: true,
 			mod: false
 		};
@@ -484,25 +482,20 @@ class Slider extends AppModule {
 	 * Bind all swipe gestures.
 	 */
 	bindSwipes() {
-		let _this = this;
 
 		if (this.$items.length > this.visibles) {
+			Helpers.detectSwipe(this.el, 75);
 
-			this.$el.swipe({
-				click: function (e) {
+			this.$el.on('swipe', (e) => {
+				let direction = e.originalEvent.detail.direction;
 
-					if (_this.options.triggerTouchSwipeClick) {
-						$(e.srcElement).trigger(App.EVENTS.click);
-					}
-				},
-				swipeLeft: function () {
-					_this.goToItem(_this.index + _this.visibles);
-				},
-				swipeRight: function () {
-					_this.goToItem(_this.index - _this.visibles);
-				},
-				threshold: 75,
-				excludedElements: '.isnt-swipeable'
+				if (direction === 'left') {
+					this.goToItem(this.index + this.visibles);
+				}
+
+				if (direction === 'right') {
+					this.goToItem(this.index - this.visibles);
+				}
 			});
 		}
 	}

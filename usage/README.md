@@ -3,18 +3,13 @@
 This component is based on the blueprint of Veams-Components.
 
 ## Requirements
-- `jquery-touchswipe`
 - `veams-component-cta`
 
 ### Sass
 - `_get-media.scss`
 
 ### JavaScript
-- `App.currentMedia` property in Veams-JS
-- `App.EVENTS.click` event in Veams-JS
-- `App.EVENTS.resize` event in Veams-JS
-- `App.EVENTS.mouseenter` event in Veams-JS
-- `App.EVENTS.mouseleave` event in Veams-JS
+- `Veams-JS`
 
 ## Usage
 
@@ -49,11 +44,6 @@ Pause Autoplay On Hover
 `Type: integer` | `Default: 0`
 
 Slide to start on
-
-#### triggerTouchSwipeClick
-`Type: boolean` | `Default: false`
-
-Trigger click on swipeable elements
 
 #### visibleItems
 `Type: object` | `Default: none`
