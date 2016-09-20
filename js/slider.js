@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v1.3.0
+ * @version v1.3.1
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -70,7 +70,7 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-			version: '1.3.0',
+			version: '1.3.1',
 			vc: true,
 			mod: false
 		};
@@ -165,6 +165,7 @@ class Slider extends AppModule {
 		this.transition = this.$ribbon.css('transition');
 		this.paginationDisabled = this.options.disablePagination || this.$items.length < 2;
 		this.infinite = this.options.infinite && this.$items.length > 1;
+		this.touchSwipeEnabled = false;
 		this.clickHandler = true;
 		this.autoPlay = this.options.autoPlay && this.infinite;
 
@@ -337,7 +338,7 @@ class Slider extends AppModule {
 		this.bindTransitions();
 		this.getAndSetDimensions();
 
-		if (App.support.touch && this.options.enableTouchSwipe) {
+		if (App.support.touch && this.options.enableTouchSwipe && !this.touchSwipeEnabled) {
 			this.bindSwipes();
 		}
 
@@ -495,7 +496,7 @@ class Slider extends AppModule {
 		if (this.$items.length > this.visibles) {
 			Helpers.detectSwipe(this.el, 75);
 
-			this.$el.on('swipe', (e) => {
+			this.$el.on(App.EVENTS.swipe, (e) => {
 				let direction = e.originalEvent.detail.direction;
 
 				if (direction === 'left') {
@@ -506,6 +507,8 @@ class Slider extends AppModule {
 					this.goToItem(this.index - this.visibles);
 				}
 			});
+
+			this.touchSwipeEnabled = true;
 		}
 	}
 

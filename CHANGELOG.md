@@ -1,3 +1,6 @@
+### v1.3.1
+- prevent multiple event binding for swipe
+
 ### v1.3.0
 - hide pagination and controls if slide count < 2
 - add option 'disablePagination'
