@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v1.3.2
+ * @version v2.0.0
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -36,7 +36,8 @@ class Slider extends AppModule {
 			items: '[data-js-atom="slider-item"]', // Slide Items
 			pagination: '[data-js-atom="slider-pagination"]', // Pagination
 			paginationList: '[data-js-atom="slider-pagination-list"]', // Pagination List
-			paginationItemClass: '.slider__pagination-list-item', // Define your class which we use in our mini tmpl
+			paginationItemJsAtom: 'slider-pagination-item', // data-js-atom for pagination list item
+			paginationItemClass: 'slider__pagination-list-item', // Define your class which we use in our mini tmpl
 			ribbon: '[data-js-atom="slider-ribbon"]',
 			wrapper: '[data-js-atom="slider-wrapper"]',
 			autoPlay: false,
@@ -70,7 +71,7 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-			version: '1.3.2',
+			version: '2.0.0',
 			vc: true,
 			mod: false
 		};
@@ -206,7 +207,7 @@ class Slider extends AppModule {
 		// Local Events
 		this.$el.on(App.clickHandler, this.options.prev, showPrev);
 		this.$el.on(App.clickHandler, this.options.next, showNext);
-		this.$el.on(App.clickHandler, this.options.paginationItemClass, goTo);
+		this.$el.on(App.clickHandler, '[data-js-atom="' + this.options.paginationItemJsAtom + '"]', goTo);
 
 		// Global Events
 		if (!App.EVENTS && !App.EVENTS.resize) {
@@ -380,7 +381,7 @@ class Slider extends AppModule {
 			this.$ribbon.css('transition', this.transition);
 		}
 
-		this.$ribbon.css('left', -obj.idx * (this.thumbWidth));
+		this.$ribbon.css('left', -obj.idx * (this.thumbWidth) + 'px');
 	}
 
 	/**
@@ -421,26 +422,29 @@ class Slider extends AppModule {
 	 * save a pagination item reference.
 	 */
 	addPagination() {
-		let paginationItem = 'data-js-atom="slider-pagination-item"';
-		let paginationItemClass = 'slider__pagination-list-item';
+		let tmpl = '';
+		let i = 0;
 
-		let tmpl = this.$items.map((i) => {
-			return $('<li class="' + paginationItemClass + '" ' + paginationItem + '><strong>' + (i + 1) + '</strong></li>')[0];
-		});
+		for (i; i < this.$items.length; i++) {
+			tmpl += '<li class="' + this.options.paginationItemClass + '" data-js-atom="' + this.options.paginationItemJsAtom + '"><strong>' + (i + 1) + '</strong></li>';
+		}
 
 		this.$paginationList.append(tmpl);
-		this.$paginationItems = $('[' + paginationItem + ']', this.$el);
+		this.$paginationItems = $('[data-js-atom="' + this.options.paginationItemJsAtom + '"]', this.$el);
 	}
 
 	/**
 	 * Navigate to a specific slide.
 	 *
 	 * @param {object} e - Event object.
+	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
-	navigateToElement(e) {
-		if ($(e.currentTarget).hasClass(this.options.activeClass)) return;
+	navigateToElement(e, currentTarget) {
+		let $currentTarget = currentTarget ? $(currentTarget) : $(e.currentTarget);
 
-		this.index = $(e.currentTarget).index();
+		if ($currentTarget.hasClass(this.options.activeClass)) return;
+
+		this.index = $currentTarget.index();
 
 		if (this.infinite) {
 			this.index++;
@@ -497,7 +501,7 @@ class Slider extends AppModule {
 			Helpers.detectSwipe(this.el, 75);
 
 			this.$el.on(App.EVENTS.swipe, (e) => {
-				let direction = e.originalEvent.detail.direction;
+				let direction = e.detail.direction;
 
 				if (direction === 'left') {
 					this.goToItem(this.index + this.visibles);
@@ -652,11 +656,11 @@ class Slider extends AppModule {
 	getAndSetDimensions() {
 		this.width = this.$el.outerWidth();
 		this.thumbWidth = this.width / this.visibles;
-		this.$wrapper.css('width', this.width);
-		this.$items.css('width', this.thumbWidth);
+		this.$wrapper.css('width', this.width + 'px');
+		this.$items.css('width', this.thumbWidth + 'px');
 
 		this.$ribbon.css({
-			'width': this.getRibbonWidth()
+			width: this.getRibbonWidth() + 'px'
 		});
 	}
 

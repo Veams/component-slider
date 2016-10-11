@@ -1,3 +1,6 @@
+### v2.0.0
+- make module compatible with VeamsQuery
+
 ### v1.3.2
 - fix event names (mouseenter, mouseleave)
 
