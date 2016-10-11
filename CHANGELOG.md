@@ -1,3 +1,6 @@
+### v1.3.2
+- fix event names (mouseenter, mouseleave)
+
 ### v1.3.1
 - prevent multiple event binding for swipe
 

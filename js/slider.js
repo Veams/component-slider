@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v1.3.1
+ * @version v1.3.2
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -70,7 +70,7 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-			version: '1.3.1',
+			version: '1.3.2',
 			vc: true,
 			mod: false
 		};
@@ -218,9 +218,9 @@ class Slider extends AppModule {
 
 		if (this.autoPlay && this.options.pauseOnHover) {
 
-			if (App.EVENTS.mouseEnter && App.EVENTS.mouseLeave) {
-				this.$el.on(App.EVENTS.mouseEnter, pause);
-				this.$el.on(App.EVENTS.mouseLeave, play);
+			if (App.EVENTS.mouseenter && App.EVENTS.mouseleave) {
+				this.$el.on(App.EVENTS.mouseenter, pause);
+				this.$el.on(App.EVENTS.mouseleave, play);
 			} else {
 				console.warn('Slider: App.EVENTS.mouseEnter and/or App.EVENTS.mouseLeave missing - option "pauseOnHover" will be ignored!');
 			}
