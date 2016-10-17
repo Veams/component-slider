@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v1.3.2
+ * @version v1.3.3
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -70,7 +70,7 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-			version: '1.3.2',
+			version: '1.3.3',
 			vc: true,
 			mod: false
 		};
@@ -182,7 +182,8 @@ class Slider extends AppModule {
 			for (let item in this.options.visibleItems) {
 				if (this.options.visibleItems.hasOwnProperty(item)) {
 					if (this.options.visibleItems[item] > 1) {
-						console.warn('Slider: Sorry - option "visibleItems" has no effect while option "infinite" is set to true!');
+						console.warn(
+								'Slider: Sorry - option "visibleItems" has no effect while option "infinite" is set to true!');
 						break;
 					}
 				}
@@ -222,7 +223,8 @@ class Slider extends AppModule {
 				this.$el.on(App.EVENTS.mouseenter, pause);
 				this.$el.on(App.EVENTS.mouseleave, play);
 			} else {
-				console.warn('Slider: App.EVENTS.mouseEnter and/or App.EVENTS.mouseLeave missing - option "pauseOnHover" will be ignored!');
+				console.warn(
+						'Slider: App.EVENTS.mouseEnter and/or App.EVENTS.mouseLeave missing - option "pauseOnHover" will be ignored!');
 			}
 		}
 	}
@@ -425,7 +427,8 @@ class Slider extends AppModule {
 		let paginationItemClass = 'slider__pagination-list-item';
 
 		let tmpl = this.$items.map((i) => {
-			return $('<li class="' + paginationItemClass + '" ' + paginationItem + '><strong>' + (i + 1) + '</strong></li>')[0];
+			return $('<li class="' + paginationItemClass + '" ' + paginationItem + '><strong>' + (i + 1) +
+					'</strong></li>')[0];
 		});
 
 		this.$paginationList.append(tmpl);
@@ -438,9 +441,13 @@ class Slider extends AppModule {
 	 * @param {object} e - Event object.
 	 */
 	navigateToElement(e) {
-		if ($(e.currentTarget).hasClass(this.options.activeClass)) return;
+		let $currentTarget = $(e.currentTarget);
 
-		this.index = $(e.currentTarget).index();
+		if ($currentTarget.hasClass(this.options.activeClass)) {
+			return;
+		}
+
+		this.index = $currentTarget.index();
 
 		if (this.infinite) {
 			this.index++;
@@ -455,13 +462,19 @@ class Slider extends AppModule {
 	 * @param {object} e - Event object.
 	 */
 	showNextElement(e) {
-		e.preventDefault();
+
+		if (e && typeof e.preventDefault === 'function') {
+			e.preventDefault();
+		}
+
+		if ($(e.currentTarget).prop('disabled')) {
+			return;
+		}
 
 		if (this.clickHandler) {
 			this.goToItem(this.index + this.visibles);
+			this.clickHandler = false;
 		}
-
-		this.clickHandler = false;
 	}
 
 	/**
@@ -470,13 +483,19 @@ class Slider extends AppModule {
 	 * @param {object} e - Event object.
 	 */
 	showPrevElement(e) {
-		e.preventDefault();
+
+		if (e && typeof e.preventDefault === 'function') {
+			e.preventDefault();
+		}
+
+		if ($(e.currentTarget).prop('disabled')) {
+			return;
+		}
 
 		if (this.clickHandler) {
 			this.goToItem(this.index - this.visibles);
+			this.clickHandler = false;
 		}
-
-		this.clickHandler = false;
 	}
 
 	/**
@@ -519,7 +538,7 @@ class Slider extends AppModule {
 	 */
 	enableBtn($btn) {
 		$btn.removeClass(this.options.hiddenClass);
-		$btn.removeAttr('disabled');
+		$btn.prop('disabled', false);
 		$btn.removeAttr('aria-disabled');
 	}
 
@@ -530,7 +549,7 @@ class Slider extends AppModule {
 	 */
 	disableBtn($btn) {
 		$btn.addClass(this.options.hiddenClass);
-		$btn.attr('disabled', 'disabled');
+		$btn.prop('disabled', true);
 		$btn.attr('aria-disabled', true);
 	}
 
@@ -613,6 +632,10 @@ class Slider extends AppModule {
 				if (!this.paginationDisabled) {
 					if (idx >= this.$paginationItems.length) {
 						slideIdx = 0;
+					}
+
+					if (idx < 0) {
+						slideIdx = this.$paginationItems.length - 1;
 					}
 
 					this.$paginationItems.eq(slideIdx).addClass(this.options.activeClass);
