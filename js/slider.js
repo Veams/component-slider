@@ -183,7 +183,8 @@ class Slider extends AppModule {
 			for (let item in this.options.visibleItems) {
 				if (this.options.visibleItems.hasOwnProperty(item)) {
 					if (this.options.visibleItems[item] > 1) {
-						console.warn('Slider: Sorry - option "visibleItems" has no effect while option "infinite" is set to true!');
+						console.warn(
+								'Slider: Sorry - option "visibleItems" has no effect while option "infinite" is set to true!');
 						break;
 					}
 				}
@@ -223,7 +224,8 @@ class Slider extends AppModule {
 				this.$el.on(App.EVENTS.mouseenter, pause);
 				this.$el.on(App.EVENTS.mouseleave, play);
 			} else {
-				console.warn('Slider: App.EVENTS.mouseEnter and/or App.EVENTS.mouseLeave missing - option "pauseOnHover" will be ignored!');
+				console.warn(
+						'Slider: App.EVENTS.mouseEnter and/or App.EVENTS.mouseLeave missing - option "pauseOnHover" will be ignored!');
 			}
 		}
 	}
@@ -426,7 +428,8 @@ class Slider extends AppModule {
 		let i = 0;
 
 		for (i; i < this.$items.length; i++) {
-			tmpl += '<li class="' + this.options.paginationItemClass + '" data-js-atom="' + this.options.paginationItemJsAtom + '"><strong>' + (i + 1) + '</strong></li>';
+			tmpl += '<li class="' + this.options.paginationItemClass + '" data-js-atom="' +
+					this.options.paginationItemJsAtom + '"><strong>' + (i + 1) + '</strong></li>';
 		}
 
 		this.$paginationList.append(tmpl);
@@ -442,7 +445,9 @@ class Slider extends AppModule {
 	navigateToElement(e, currentTarget) {
 		let $currentTarget = currentTarget ? $(currentTarget) : $(e.currentTarget);
 
-		if ($currentTarget.hasClass(this.options.activeClass)) return;
+		if ($currentTarget.hasClass(this.options.activeClass)) {
+			return;
+		}
 
 		this.index = $currentTarget.index();
 
@@ -457,30 +462,46 @@ class Slider extends AppModule {
 	 * Go to the next slide.
 	 *
 	 * @param {object} e - Event object.
+	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
-	showNextElement(e) {
-		e.preventDefault();
+	showNextElement(e, currentTarget) {
+		let $currentTarget = currentTarget ? $(currentTarget) : $(e.currentTarget);
+
+		if (e && typeof e.preventDefault === 'function') {
+			e.preventDefault();
+		}
+
+		if ($currentTarget.prop('disabled')) {
+			return;
+		}
 
 		if (this.clickHandler) {
 			this.goToItem(this.index + this.visibles);
+			this.clickHandler = false;
 		}
-
-		this.clickHandler = false;
 	}
 
 	/**
 	 * Go to the previous slide.
 	 *
 	 * @param {object} e - Event object.
+	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
-	showPrevElement(e) {
-		e.preventDefault();
+	showPrevElement(e, currentTarget) {
+		let $currentTarget = currentTarget ? $(currentTarget) : $(e.currentTarget);
+
+		if (e && typeof e.preventDefault === 'function') {
+			e.preventDefault();
+		}
+
+		if ($currentTarget.prop('disabled')) {
+			return;
+		}
 
 		if (this.clickHandler) {
 			this.goToItem(this.index - this.visibles);
+			this.clickHandler = false;
 		}
-
-		this.clickHandler = false;
 	}
 
 	/**
@@ -523,7 +544,7 @@ class Slider extends AppModule {
 	 */
 	enableBtn($btn) {
 		$btn.removeClass(this.options.hiddenClass);
-		$btn.removeAttr('disabled');
+		$btn.prop('disabled', false);
 		$btn.removeAttr('aria-disabled');
 	}
 
@@ -534,7 +555,7 @@ class Slider extends AppModule {
 	 */
 	disableBtn($btn) {
 		$btn.addClass(this.options.hiddenClass);
-		$btn.attr('disabled', 'disabled');
+		$btn.prop('disabled', true);
 		$btn.attr('aria-disabled', true);
 	}
 
@@ -617,6 +638,10 @@ class Slider extends AppModule {
 				if (!this.paginationDisabled) {
 					if (idx >= this.$paginationItems.length) {
 						slideIdx = 0;
+					}
+
+					if (idx < 0) {
+						slideIdx = this.$paginationItems.length - 1;
 					}
 
 					this.$paginationItems.eq(slideIdx).addClass(this.options.activeClass);
