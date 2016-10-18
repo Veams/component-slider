@@ -2,6 +2,10 @@
 
 This component is based on the blueprint of Veams-Components.
 
+## Version
+
+Latest version is ```v1.3.3```
+
 ## Requirements
 - `veams-component-cta`
 
