@@ -13,7 +13,7 @@ Latest version is ```v1.3.3```
 - `_get-media.scss`
 
 ### JavaScript
-- `Veams-JS >= v3.4.1`
+- `Veams-JS >= v3.6.0`
 
 ## Usage
 
