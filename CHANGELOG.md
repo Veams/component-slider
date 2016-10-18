@@ -1,6 +1,10 @@
 ### v2.0.0
 - make module compatible with VeamsQuery
 
+### v1.3.3
+- fix pagination indicator bug (while infinite: true)
+- fix possible deadlock if more than one item is visible
+
 ### v1.3.2
 - fix event names (mouseenter, mouseleave)
 
