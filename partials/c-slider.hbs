@@ -1,40 +1,22 @@
-{{! ---
-component: Slider
-============================================
+---
+publish: false
+---
+<div class="c-slider{{#if options.settings.sliderContextClass}}--{{options.settings.sliderContextClass}}{{else}}--default{{/if}}{{#if options.settings.sliderContextClass}} {{options.settings.sliderContextClass}}{{/if}}"
+     data-css="c-slider"
+     data-js-module="slider"{{#if options.settings.sliderJsOptions}}
+     data-js-options='{{stringify options.settings.sliderJsOptions}}'{{/if}}>
 
-Requirements:
-- cta (only hbs)
-
-Options:
-- contextClass {String} [default] - Just pass a string
-- classes {String} - Modifier classes
-- jsOptions {Array} - Array with keys and values
-- jsOptions.jsKey {String} - Define a key (i.e. unresolvedClass)
-- jsOptions.jsValue {String} - Define a value (i.e. is-unresolved)
-
-Important Notes:
-This component is written as wrapWith template, so you have the possibility to place your custom content.
-
---- }}
-
-<div class="c-slider{{#if
-		options.settings.contextClass}}--{{options.settings.contextClass}}{{else}}--default{{/if}}{{#if
-		options.settings.classes}} {{options.settings.classes}}{{/if}}" data-css="c-slider" data-js-module="slider"{{#if
-		options.settings.jsOptions}}data-js-options='{ {{#each options.settings.jsOptions}}"{{jsKey}}": {{#unless
-		jsObject}}"{{/unless}}{{{jsValue}}}{{#unless jsObject}}"{{/unless}}{{#if
-		@last}}{{else}}, {{/if}}{{/each}} }'{{/if}}>
-	<div class="slider__actions" data-js-atom="slider-actions">
-		{{#each options.content.sliderCta}}
-			{{> c-cta }}
-		{{/each}}
-	</div>
-	<div class="slider__list-wrapper" data-js-atom="slider-wrapper">
-		<div class="slider__list" data-js-atom="slider-ribbon">
-			{{{yield}}}
+	{{#with options.content.sliderButtons}}
+		<div class="slider__controls-wrapper" data-js-atom="slider-actions">
+			{{> c-slider__controls }}
 		</div>
+	{{/with}}
+
+	<div class="slider__content{{#unless options.settings.sliderInnerFullWidth}} is-container{{/unless}}">
+		{{{yield}}}
 	</div>
-	<div class="slider__pagination" data-js-atom="slider-pagination">
-		<ol class="slider__pagination-list" data-js-atom="slider-pagination-list">
-		</ol>
+
+	<div class="slider__pagination-wrapper" data-js-atom="slider-pagination">
+		{{> c-slider__pagination }}
 	</div>
 </div>

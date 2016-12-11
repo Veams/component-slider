@@ -1,0 +1,26 @@
+---
+type: component
+layout: "lyt-docs"
+contextData: "slider-bp"
+publish: true
+displayName: "c-slider"
+scssFiles:
+- _c-slider.scss
+subTemplates:
+- c-slider
+- c-slider__item
+---
+
+{{! wrapWith START: Slider }}
+{{#wrapWith "c-slider" settings=this.settings content=this.content}}
+	{{! WrapWith START: Slider List }}
+	{{#wrapWith "c-slider__list" settings=this.settings}}
+		{{#times 8}}
+			{{#wrapWith "c-slider__item"}}
+				<img src="https://placehold.it/1920x800" alt="test">
+			{{/wrapWith}}
+		{{/times}}
+	{{/wrapWith}}
+	{{! WrapWith END: Slider List }}
+{{/wrapWith}}
+{{! wrapWith END: Slider}}

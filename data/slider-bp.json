@@ -1,35 +1,42 @@
 {
-	"simple": {
-		"settings": {
-			"contextClass": "default",
-			"classes": "is-bg-highlight-1",
-			"jsOptions": [
-				{
-					"jsKey": "",
-					"jsValue": "",
-					"jsObject": false
+	"variations": {
+		"simple": {
+			"docs": {
+				"variationName": "Default Slider"
+			},
+			"settings": {
+				"sliderContextClass": "default"
+			},
+			"content": {
+				"sliderButtons": {
+					"next": "Next",
+					"prev": "Previous"
 				}
-			]
+			}
 		},
-		"content": {
-			"sliderCta": [
-				{
-					"ctaButton": true,
-					"ctaContextClass": "slider",
-					"ctaClass": "is-previous",
-					"ctaSpan": true,
-					"ctaContent": "Previous",
-					"ctaJsAtom": "slider-prev"
-				},
-				{
-					"ctaButton": true,
-					"ctaContextClass": "slider",
-					"ctaClass": "is-next",
-					"ctaSpan": true,
-					"ctaContent": "Next",
-					"ctaJsAtom": "slider-next"
+		"multiple": {
+			"docs": {
+				"variationName": "Multiple items defined by breakpoints"
+			},
+			"settings": {
+				"sliderContextClass": "default",
+				"sliderJsOptions": {
+					"visibleItems": {
+						"desktop": 3,
+						"tablet-large": 2,
+						"tablet-small": 2,
+						"mobile-large": 2,
+						"mobile-medium": 1,
+						"mobile-small": 1
+					}
 				}
-			]
+			},
+			"content": {
+				"sliderButtons": {
+					"next": "Next",
+					"prev": "Previous"
+				}
+			}
 		}
 	}
 }

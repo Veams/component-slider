@@ -2,17 +2,17 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v2.0.0
+ * @version v2.1.0
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
  */
 
-import App from '../../app';
-import Helpers from '../../utils/helpers';
-import AppModule from '../_global/module';
+import App from 'app';
+import AppModule from 'app-module';
 
 const $ = App.$;
+const Helpers = App.Helpers;
 
 class Slider extends AppModule {
 	/**
@@ -44,7 +44,7 @@ class Slider extends AppModule {
 			autoPlayInterval: 3000,
 			disablePagination: false,
 			enableTouchSwipe: true,
-			infinite: true,
+			infinite: false,
 			pauseOnHover: true,
 			startAtIndex: 0,
 			visibleItems: {
@@ -71,7 +71,7 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-			version: '2.0.0',
+			version: '2.1.0',
 			vc: true,
 			mod: false
 		};
@@ -429,7 +429,7 @@ class Slider extends AppModule {
 
 		for (i; i < this.$items.length; i++) {
 			tmpl += '<li class="' + this.options.paginationItemClass + '" data-js-atom="' +
-					this.options.paginationItemJsAtom + '"><strong>' + (i + 1) + '</strong></li>';
+					this.options.paginationItemJsAtom + '" data-index="' + i + '"><strong>' + (i + 1) + '</strong></li>';
 		}
 
 		this.$paginationList.append(tmpl);
@@ -449,7 +449,7 @@ class Slider extends AppModule {
 			return;
 		}
 
-		this.index = $currentTarget.index();
+		this.index = parseInt($currentTarget.attr('data-index'), 10) || $currentTarget.index();
 
 		if (this.infinite) {
 			this.index++;
