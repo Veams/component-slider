@@ -91,7 +91,7 @@ Global Styles
 
 	.slider__control {
 		@include reset-btn();
-		@include centering(h);
+		@include centering(v);
 
 		background-color: $slider-control-bg-color;
 		position: absolute;
