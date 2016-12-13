@@ -27,7 +27,7 @@
 // @INSERT :: START @tag: scss-import //
 @import "components/_c-slider";
 // @INSERT :: END //
-// @INSERT :: START @tag: scss-import-self-contained //
+// @INSERT :: START @tag: scss-self-contained-import //
 @import "../templating/partials/components/slider/scss/_c-slider";
 // @INSERT :: END //
 ```
@@ -39,7 +39,7 @@
 // @INSERT :: START @tag: js-import //
 import Slider from './modules/slider/slider';
 // @INSERT :: END //
-// @INSERT :: START @tag: js-import-self-contained //
+// @INSERT :: START @tag: js-self-contained-import //
 import Slider from '../templating/partials/components/slider/js/slider';
 // @INSERT :: END //
 ```
