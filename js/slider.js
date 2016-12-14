@@ -26,27 +26,26 @@ class Slider extends AppModule {
 	 */
 	constructor(obj) {
 		let options = {
-			unresolvedClass: 'is-unresolved',
 			activeClass: 'is-active',
-			hiddenClass: 'is-hidden',
-			cloneClass: 'is-cloned',
 			actions: '[data-js-atom="slider-actions"]', // Previous Button
-			prev: '[data-js-atom="slider-prev"]', // Previous Button
-			next: '[data-js-atom="slider-next"]', // Next Button
-			items: '[data-js-atom="slider-item"]', // Slide Items
-			pagination: '[data-js-atom="slider-pagination"]', // Pagination
-			paginationList: '[data-js-atom="slider-pagination-list"]', // Pagination List
-			paginationItemJsAtom: 'slider-pagination-item', // data-js-atom for pagination list item
-			paginationItemClass: 'slider__pagination-list-item', // Define your class which we use in our mini tmpl
-			ribbon: '[data-js-atom="slider-ribbon"]',
-			wrapper: '[data-js-atom="slider-wrapper"]',
 			autoPlay: false,
 			autoPlayInterval: 3000,
+			cloneClass: 'is-cloned',
 			disablePagination: false,
 			enableTouchSwipe: true,
+			hiddenClass: 'is-hidden',
 			infinite: false,
+			items: '[data-js-atom="slider-item"]', // Slide Items
+			next: '[data-js-atom="slider-next"]', // Next Button
+			prev: '[data-js-atom="slider-prev"]', // Previous Button
+			pagination: '[data-js-atom="slider-pagination"]', // Pagination
+			paginationItemClass: 'slider__pagination-list-item', // Define your class which we use in our mini tmpl
+			paginationItemJsAtom: 'slider-pagination-item', // data-js-atom for pagination list item
+			paginationList: '[data-js-atom="slider-pagination-list"]', // Pagination List
+			ribbon: '[data-js-atom="slider-ribbon"]',
 			pauseOnHover: true,
 			startAtIndex: 0,
+			unresolvedClass: 'is-unresolved',
 			visibleItems: {
 				'desktop': 1,
 				'tablet-large': 1,
@@ -54,7 +53,8 @@ class Slider extends AppModule {
 				'mobile-large': 1,
 				'mobile-medium': 1,
 				'mobile-small': 1
-			}
+			},
+			wrapper: '[data-js-atom="slider-wrapper"]'
 		};
 
 		super(obj, options);

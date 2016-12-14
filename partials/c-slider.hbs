@@ -16,7 +16,9 @@ publish: false
 		{{{yield}}}
 	</div>
 
-	<div class="slider__pagination-wrapper" data-js-atom="slider-pagination">
-		{{> c-slider__pagination }}
-	</div>
+	{{#unless options.settings.sliderHidePagination}}
+		<div class="slider__pagination-wrapper" data-js-atom="slider-pagination">
+			{{> c-slider__pagination }}
+		</div>
+	{{/unless}}
 </div>
