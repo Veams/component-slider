@@ -2,17 +2,21 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
+<<<<<<< HEAD
  * @version v1.3.3
+=======
+ * @version v2.1.0
+>>>>>>> dev
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
  */
 
-import App from '../../app';
-import Helpers from '../../utils/helpers';
-import AppModule from '../_global/module';
+import App from 'app';
+import AppModule from 'app-module';
 
 const $ = App.$;
+const Helpers = App.Helpers;
 
 class Slider extends AppModule {
 	/**
@@ -26,26 +30,26 @@ class Slider extends AppModule {
 	 */
 	constructor(obj) {
 		let options = {
-			unresolvedClass: 'is-unresolved',
 			activeClass: 'is-active',
-			hiddenClass: 'is-hidden',
-			cloneClass: 'is-cloned',
 			actions: '[data-js-atom="slider-actions"]', // Previous Button
-			prev: '[data-js-atom="slider-prev"]', // Previous Button
-			next: '[data-js-atom="slider-next"]', // Next Button
-			items: '[data-js-atom="slider-item"]', // Slide Items
-			pagination: '[data-js-atom="slider-pagination"]', // Pagination
-			paginationList: '[data-js-atom="slider-pagination-list"]', // Pagination List
-			paginationItemClass: '.slider__pagination-list-item', // Define your class which we use in our mini tmpl
-			ribbon: '[data-js-atom="slider-ribbon"]',
-			wrapper: '[data-js-atom="slider-wrapper"]',
 			autoPlay: false,
 			autoPlayInterval: 3000,
+			cloneClass: 'is-cloned',
 			disablePagination: false,
 			enableTouchSwipe: true,
-			infinite: true,
+			hiddenClass: 'is-hidden',
+			infinite: false,
+			items: '[data-js-atom="slider-item"]', // Slide Items
+			next: '[data-js-atom="slider-next"]', // Next Button
+			prev: '[data-js-atom="slider-prev"]', // Previous Button
+			pagination: '[data-js-atom="slider-pagination"]', // Pagination
+			paginationItemClass: 'slider__pagination-list-item', // Define your class which we use in our mini tmpl
+			paginationItemJsAtom: 'slider-pagination-item', // data-js-atom for pagination list item
+			paginationList: '[data-js-atom="slider-pagination-list"]', // Pagination List
+			ribbon: '[data-js-atom="slider-ribbon"]',
 			pauseOnHover: true,
 			startAtIndex: 0,
+			unresolvedClass: 'is-unresolved',
 			visibleItems: {
 				'desktop': 1,
 				'tablet-large': 1,
@@ -53,7 +57,8 @@ class Slider extends AppModule {
 				'mobile-large': 1,
 				'mobile-medium': 1,
 				'mobile-small': 1
-			}
+			},
+			wrapper: '[data-js-atom="slider-wrapper"]'
 		};
 
 		super(obj, options);
@@ -70,7 +75,11 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
+<<<<<<< HEAD
 			version: '1.3.3',
+=======
+			version: '2.1.0',
+>>>>>>> dev
 			vc: true,
 			mod: false
 		};
@@ -207,7 +216,7 @@ class Slider extends AppModule {
 		// Local Events
 		this.$el.on(App.clickHandler, this.options.prev, showPrev);
 		this.$el.on(App.clickHandler, this.options.next, showNext);
-		this.$el.on(App.clickHandler, this.options.paginationItemClass, goTo);
+		this.$el.on(App.clickHandler, '[data-js-atom="' + this.options.paginationItemJsAtom + '"]', goTo);
 
 		// Global Events
 		if (!App.EVENTS && !App.EVENTS.resize) {
@@ -382,7 +391,7 @@ class Slider extends AppModule {
 			this.$ribbon.css('transition', this.transition);
 		}
 
-		this.$ribbon.css('left', -obj.idx * (this.thumbWidth));
+		this.$ribbon.css('left', -obj.idx * (this.thumbWidth) + 'px');
 	}
 
 	/**
@@ -421,25 +430,36 @@ class Slider extends AppModule {
 	/**
 	 * Add pagination elements with a simple string template and
 	 * save a pagination item reference.
+	 *
+	 * TODO: Add ES string templates
 	 */
 	addPagination() {
-		let paginationItem = 'data-js-atom="slider-pagination-item"';
-		let paginationItemClass = 'slider__pagination-list-item';
+		let tmpl = '';
+		let i = 0;
 
+<<<<<<< HEAD
 		let tmpl = this.$items.map((i) => {
 			return $('<li class="' + paginationItemClass + '" ' + paginationItem + '><strong>' + (i + 1) +
 					'</strong></li>')[0];
 		});
+=======
+		for (i; i < this.$items.length; i++) {
+			tmpl += '<li class="' + this.options.paginationItemClass + '" data-js-atom="' +
+					this.options.paginationItemJsAtom + '" data-index="' + i + '"><strong>' + (i + 1) + '</strong></li>';
+		}
+>>>>>>> dev
 
 		this.$paginationList.append(tmpl);
-		this.$paginationItems = $('[' + paginationItem + ']', this.$el);
+		this.$paginationItems = $('[data-js-atom="' + this.options.paginationItemJsAtom + '"]', this.$el);
 	}
 
 	/**
 	 * Navigate to a specific slide.
 	 *
 	 * @param {object} e - Event object.
+	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
+<<<<<<< HEAD
 	navigateToElement(e) {
 		let $currentTarget = $(e.currentTarget);
 
@@ -448,6 +468,16 @@ class Slider extends AppModule {
 		}
 
 		this.index = $currentTarget.index();
+=======
+	navigateToElement(e, currentTarget) {
+		let $currentTarget = currentTarget ? $(currentTarget) : $(e.currentTarget);
+
+		if ($currentTarget.hasClass(this.options.activeClass)) {
+			return;
+		}
+
+		this.index = parseInt($currentTarget.attr('data-index'), 10) || $currentTarget.index();
+>>>>>>> dev
 
 		if (this.infinite) {
 			this.index++;
@@ -460,14 +490,24 @@ class Slider extends AppModule {
 	 * Go to the next slide.
 	 *
 	 * @param {object} e - Event object.
+	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
+<<<<<<< HEAD
 	showNextElement(e) {
+=======
+	showNextElement(e, currentTarget) {
+		let $currentTarget = currentTarget ? $(currentTarget) : $(e.currentTarget);
+>>>>>>> dev
 
 		if (e && typeof e.preventDefault === 'function') {
 			e.preventDefault();
 		}
 
+<<<<<<< HEAD
 		if ($(e.currentTarget).prop('disabled')) {
+=======
+		if ($currentTarget.prop('disabled')) {
+>>>>>>> dev
 			return;
 		}
 
@@ -481,14 +521,24 @@ class Slider extends AppModule {
 	 * Go to the previous slide.
 	 *
 	 * @param {object} e - Event object.
+	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
+<<<<<<< HEAD
 	showPrevElement(e) {
+=======
+	showPrevElement(e, currentTarget) {
+		let $currentTarget = currentTarget ? $(currentTarget) : $(e.currentTarget);
+>>>>>>> dev
 
 		if (e && typeof e.preventDefault === 'function') {
 			e.preventDefault();
 		}
 
+<<<<<<< HEAD
 		if ($(e.currentTarget).prop('disabled')) {
+=======
+		if ($currentTarget.prop('disabled')) {
+>>>>>>> dev
 			return;
 		}
 
@@ -516,7 +566,7 @@ class Slider extends AppModule {
 			Helpers.detectSwipe(this.el, 75);
 
 			this.$el.on(App.EVENTS.swipe, (e) => {
-				let direction = e.originalEvent.detail.direction;
+				let direction = e.detail.direction;
 
 				if (direction === 'left') {
 					this.goToItem(this.index + this.visibles);
@@ -675,11 +725,11 @@ class Slider extends AppModule {
 	getAndSetDimensions() {
 		this.width = this.$el.outerWidth();
 		this.thumbWidth = this.width / this.visibles;
-		this.$wrapper.css('width', this.width);
-		this.$items.css('width', this.thumbWidth);
+		this.$wrapper.css('width', this.width + 'px');
+		this.$items.css('width', this.thumbWidth + 'px');
 
 		this.$ribbon.css({
-			'width': this.getRibbonWidth()
+			width: this.getRibbonWidth() + 'px'
 		});
 	}
 

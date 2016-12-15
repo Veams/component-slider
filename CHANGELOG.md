@@ -1,3 +1,14 @@
+### v2.1.0
+- Add data-index to slider
+- Refactor data structure
+- Refactor partial structure
+- Add all important notes to readme
+- Exclude Insertpoints into own file
+- Add self-contained option
+
+### v2.0.0
+- make module compatible with VeamsQuery
+
 ### v1.3.3
 - fix pagination indicator bug (while infinite: true)
 - fix possible deadlock if more than one item is visible
