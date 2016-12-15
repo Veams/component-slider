@@ -422,6 +422,8 @@ class Slider extends AppModule {
 	/**
 	 * Add pagination elements with a simple string template and
 	 * save a pagination item reference.
+	 *
+	 * TODO: Add ES string templates
 	 */
 	addPagination() {
 		let tmpl = '';

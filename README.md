@@ -9,11 +9,7 @@
 
 The component represents a simple but powerful slider. 
 
-Accordions are elements used to expand and collapse content that is broken into logical sections, much like tabs.
-
-The accordion is based on the blueprint of Veams-Components and is a wrap-with component to support flexible content with predefined surrounded markup.
-
-The accordion is jQuery-free (we use Veams-Query) and contains some accessiblity functionality.
+The slider module is a component for cycling through elements, like a carousel or slideshow. It allows users to swipe on touch-enabled devices. 
 
 -----------
 
@@ -73,63 +69,40 @@ The partial is a `wrapWith` partial.
 
 The module gives you the possibility to override default options: 
 
+- activeClass {`String`} ['is-active'] - _Class for the active slide._
+- actions {`String`} ['[data-js-atom="slider-actions"]'] - _Actions wrapper element in the component._
 - autoPlay {`Boolean`} [false] - _Enable autoplay option of the slider._
 - autoPlayInterval {`Number`} [3000] - _Autoplay speed in milliseconds._
+- cloneClass {`String`} ['is-cloned'] - _For the infinite slider the last and first element get cloned. The cloning class can be overriden._
 - disablePagination {`Boolean`} [false] - _Disable pagination._
 - enableTouchSwipe {`Boolean`} [true] - _Enable support for swipe gestures on touch devices._
-- clickHandler {`String`} ['click'] - _Define a click handler for the buttons._
-- closeClass {`String`} ['is-closed'] - _Define the closing class for accordion content items._
-- dataMaxAttr {`String`} ['data-js-height'] - _Define the attribute in which the calculated height is saved._
-- openAllOnInit {`Boolean`} [false] - _If set to true, all panels stays open on render._
-- openByHash {`Boolean`} [false] - _If set to true, panel can be opened by url hash referencing the id of the panel._
-- openClass {`Boolean`} ['is-open'] - _Define the opening class for accordion content items._
+- hiddenClass {`String`} ['is-hidden'] - _The hidden class used by handling the visibility of the slider._
+- infinite {`Boolean`} ['is-closed'] - _The slider will be set in infinite mode. Can not be used with multiple active slide items._
+- items {`String`} ['[data-js-atom="slider-item"]'] - _Define the slide item element._
+- next {`String`} ['[data-js-atom="slider-next"]'] - _Define the next button element._
+- prev {`String`} ['[data-js-atom="slider-prev"]'] - _Define the prev button element._
+- pagination {`String`} ['[data-js-atom="slider-pagination"]'] - _Define the pagination element in which the pagination items are generated in._
+- paginationItemClass {`String`} ['slider__pagination-list-item'] - _Class for the generated pagination item._
+- paginationItemJsAtom {`String`} ['slider-pagination-item'] - _Data attribute for the generated pagination item._
+- paginationList {`String`} ['[data-js-atom="slider-pagination-list"]'] - _Define the pagination list element in which the pagination items are generated in._
+- ribbon {`String`} ['[data-js-atom="slider-ribbon"]'] - _Define the slider ribbon which is holding all slides and gets the full width._
+- pauseOnHover {`Boolean`} [true] - _When `autoplay` is set you can enable/disable pause on hover._
+- startAtIndex {`Number`} [0] - _Start index for the slider._
 - openIndex {`Number`} [null] - _Index of panel to be opened on init (zero based)._
-- openOnViewports {`Array`} [ ['desktop', 'tablet-large', 'tablet-small'] ] - _Viewports on which the openIndex panel is opened on init._
-- singleOpen {`Boolean`} [false] - _If set to true, only one panel can be opened at the same time._
-- tabMode {`Boolean`} [false] - _If set to true, the accordion behaves like a tab module (click on active button will not close corresponding panel)._
-- unresolvedClass {`String`} ['is-unresolved'] - _Define the unresolved class for the whole accordion which will be deleted after `initialize()` and `render()` is finished._
+- visibleItems {`Object`} [ {'desktop': 1, 'tablet-large': 1, 'tablet-small': 1, 'mobile-large': 1, 'mobile-medium': 1, 'mobile-small': 1} ] - _Define how many slide items should be visible on different viewports._
+- wrapper {`String`} ['[data-js-atom="slider-wrapper"]'] - _Define the slider wrapper element._
 
 ------------
 
 ## Sass Options
 
 There are multiple global variables which you can change: 
-- $accordion-toggle-duration [`300ms !default`] - _Speed of toggling._
-- $accordion-transition-method [`ease !default`] - _Transition method of toggle effect._
-- $accordion-icon-color [`#666 !default`] - _+ icon color._
-- $accordion-icon-width [`30px !default`] - _+ icon width._
-- $accordion-icon-height [`2px !default`] - _+ icon height._
-- $accordion-btn-color `[$accordion-icon-color !default`] - _Accordion button color._
-- $accordion-btn-bg-color [`rgba(255, 255, 255, 0.5) !default`] - _Background color of the accordion button._
-- $accordion-padding [`1rem !default`] - _Default padding which will be used in the accordion._
-
-
-#### disablePagination
-`Type: boolean` | `Default: false`
-
-Disable pagination
-
-#### enableTouchSwipe
-`Type: boolean` | `Default: true`
-
-Enable support for swipe gestures on touch devices
-
-#### infinite
-`Type: boolean` | `Default: true`
-
-Infinite loop sliding
-
-#### pauseOnHover
-`Type: boolean` | `Default: true`
-
-Pause Autoplay On Hover
-
-#### startAtIndex
-`Type: integer` | `Default: 0`
-
-Slide to start on
-
-#### visibleItems
-`Type: object` | `Default: none`
-
-Object containing breakpoints. Determines visible items at given screen width
+- $slider-darken [`10 !default`] - _Darken value for hover effects._
+- $slider-unresolved-height [`300px !default`] - _Set a fix height when the slider is in unresolved state._
+- $slider-duration [`600ms !default`] - _Slide item animation duration._
+- $slider-ease-method [`ease !default`] - _Slide item animation ease method._
+- $slider-control-bg-color [`#a5cfd1 !default`] - _Background color of control buttons._
+- $slider-pagination-color `[#555 !default`] - _Background color of pagination items._
+- $slider-pagination-color-active `[$slider-pagination-color !default`] - _Active vackground color of pagination items which gets darken by `$slider-darken`._
+- $slider-pagination-size [`15px !default`] - _Pagination size (width & height)._
+- $slider-pagination-border-radius [`25% !default`] - _Border radius of pagination items._
