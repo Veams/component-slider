@@ -2,11 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
-<<<<<<< HEAD
- * @version v1.3.3
-=======
  * @version v2.1.0
->>>>>>> dev
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -75,11 +71,7 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-<<<<<<< HEAD
-			version: '1.3.3',
-=======
 			version: '2.1.0',
->>>>>>> dev
 			vc: true,
 			mod: false
 		};
@@ -192,7 +184,7 @@ class Slider extends AppModule {
 				if (this.options.visibleItems.hasOwnProperty(item)) {
 					if (this.options.visibleItems[item] > 1) {
 						console.warn(
-								'Slider: Sorry - option "visibleItems" has no effect while option "infinite" is set to true!');
+							'Slider: Sorry - option "visibleItems" has no effect while option "infinite" is set to true!');
 						break;
 					}
 				}
@@ -233,7 +225,7 @@ class Slider extends AppModule {
 				this.$el.on(App.EVENTS.mouseleave, play);
 			} else {
 				console.warn(
-						'Slider: App.EVENTS.mouseEnter and/or App.EVENTS.mouseLeave missing - option "pauseOnHover" will be ignored!');
+					'Slider: App.EVENTS.mouseEnter and/or App.EVENTS.mouseLeave missing - option "pauseOnHover" will be ignored!');
 			}
 		}
 	}
@@ -437,17 +429,10 @@ class Slider extends AppModule {
 		let tmpl = '';
 		let i = 0;
 
-<<<<<<< HEAD
-		let tmpl = this.$items.map((i) => {
-			return $('<li class="' + paginationItemClass + '" ' + paginationItem + '><strong>' + (i + 1) +
-					'</strong></li>')[0];
-		});
-=======
 		for (i; i < this.$items.length; i++) {
 			tmpl += '<li class="' + this.options.paginationItemClass + '" data-js-atom="' +
-					this.options.paginationItemJsAtom + '" data-index="' + i + '"><strong>' + (i + 1) + '</strong></li>';
+				this.options.paginationItemJsAtom + '" data-index="' + i + '"><strong>' + (i + 1) + '</strong></li>';
 		}
->>>>>>> dev
 
 		this.$paginationList.append(tmpl);
 		this.$paginationItems = $('[data-js-atom="' + this.options.paginationItemJsAtom + '"]', this.$el);
@@ -459,16 +444,6 @@ class Slider extends AppModule {
 	 * @param {object} e - Event object.
 	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
-<<<<<<< HEAD
-	navigateToElement(e) {
-		let $currentTarget = $(e.currentTarget);
-
-		if ($currentTarget.hasClass(this.options.activeClass)) {
-			return;
-		}
-
-		this.index = $currentTarget.index();
-=======
 	navigateToElement(e, currentTarget) {
 		let $currentTarget = currentTarget ? $(currentTarget) : $(e.currentTarget);
 
@@ -477,7 +452,6 @@ class Slider extends AppModule {
 		}
 
 		this.index = parseInt($currentTarget.attr('data-index'), 10) || $currentTarget.index();
->>>>>>> dev
 
 		if (this.infinite) {
 			this.index++;
@@ -492,22 +466,14 @@ class Slider extends AppModule {
 	 * @param {object} e - Event object.
 	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
-<<<<<<< HEAD
-	showNextElement(e) {
-=======
 	showNextElement(e, currentTarget) {
 		let $currentTarget = currentTarget ? $(currentTarget) : $(e.currentTarget);
->>>>>>> dev
 
 		if (e && typeof e.preventDefault === 'function') {
 			e.preventDefault();
 		}
 
-<<<<<<< HEAD
-		if ($(e.currentTarget).prop('disabled')) {
-=======
 		if ($currentTarget.prop('disabled')) {
->>>>>>> dev
 			return;
 		}
 
@@ -523,22 +489,14 @@ class Slider extends AppModule {
 	 * @param {object} e - Event object.
 	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
-<<<<<<< HEAD
-	showPrevElement(e) {
-=======
 	showPrevElement(e, currentTarget) {
 		let $currentTarget = currentTarget ? $(currentTarget) : $(e.currentTarget);
->>>>>>> dev
 
 		if (e && typeof e.preventDefault === 'function') {
 			e.preventDefault();
 		}
 
-<<<<<<< HEAD
-		if ($(e.currentTarget).prop('disabled')) {
-=======
 		if ($currentTarget.prop('disabled')) {
->>>>>>> dev
 			return;
 		}
 
