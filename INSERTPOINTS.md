@@ -75,7 +75,6 @@ Helpers.loadModule({
 #### Custom Events
 ``` js
 // @INSERT :: START @tag: js-events //
-
 /**
  * Events for Slider
  */
