@@ -9,7 +9,7 @@
 
 The component represents a simple but powerful slider. 
 
-The slider module is a component for cycling through elements, like a carousel or slideshow. It allows users to swipe on touch-enabled devices. 
+> The slider module is a component for cycling through elements, like a carousel or slideshow. It allows users to swipe on touch-enabled devices. 
 
 -----------
 

@@ -16,7 +16,8 @@
 		},
 		"multiple": {
 			"docs": {
-				"variationName": "Multiple items defined by breakpoints"
+				"variationName": "Multiple items defined by breakpoints",
+				"variationDescription": "By providing 'visibleItems' you can define the visible active slides per breakpoint."
 			},
 			"settings": {
 				"sliderContextClass": "default",
@@ -29,6 +30,63 @@
 						"mobile-medium": 1,
 						"mobile-small": 1
 					}
+				}
+			},
+			"content": {
+				"sliderButtons": {
+					"next": "Next",
+					"prev": "Previous"
+				}
+			}
+		},
+		"infinite": {
+			"docs": {
+				"variationName": "Slider with enabled infinite option",
+				"variationDescription": "This means that the first and last elements get cloned and appended to the slide items. Please be aware of that you can not use this option in combination with multiple active slide elements."
+			},
+			"settings": {
+				"sliderContextClass": "default",
+				"sliderJsOptions": {
+					"infinite": true
+				}
+			},
+			"content": {
+				"sliderButtons": {
+					"next": "Next",
+					"prev": "Previous"
+				}
+			}
+		},
+		"overflow": {
+			"docs": {
+				"variationName": "Slider with overflow area",
+				"variationDescription": "By providing 'sliderOverflow' you can display all other items next to the active slide(s) as well."
+			},
+			"settings": {
+				"sliderContextClass": "default",
+				"sliderOverflow": true,
+				"sliderJsOptions": {
+					"infinite": true
+				}
+			},
+			"content": {
+				"sliderButtons": {
+					"next": "Next",
+					"prev": "Previous"
+				}
+			}
+		},
+		"autoplay": {
+			"docs": {
+				"variationName": "Slider with autoPlay option",
+				"variationDescription": "The autoPlay option gives you the possibility to cycle through your slides automatically by a defined interval. You need to make sure to enable the infinite option. On hover the sliding stops."
+			},
+			"settings": {
+				"sliderContextClass": "default",
+				"sliderJsOptions": {
+					"infinite": true,
+					"autoPlay": true,
+					"autoPlayInterval": 3500
 				}
 			},
 			"content": {
