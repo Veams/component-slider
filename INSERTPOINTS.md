@@ -7,13 +7,13 @@
     {{! wrapWith START: Slider }}
     {{#wrapWith "c-slider" settings=this.settings content=this.content}}
         {{! WrapWith START: Slider List }}
-        {{!#wrapWith "c-slider__list"}}
+        {{#wrapWith "c-slider__list"}}
             {{#times 8}}
                 {{#wrapWith "c-slider__item"}}
                     <img src="https://placehold.it/1920x800" alt="test">
                 {{/wrapWith}}
             {{/times}}
-        {{!/wrapWith}}
+        {{/wrapWith}}
         {{! WrapWith END: Slider List }}
     {{/wrapWith}}
     {{! wrapWith END: Slider}}

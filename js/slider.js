@@ -206,9 +206,9 @@ class Slider extends AppModule {
 		let pause = this.pause.bind(this);
 
 		// Local Events
-		this.$el.on(App.clickHandler, this.options.prev, showPrev);
-		this.$el.on(App.clickHandler, this.options.next, showNext);
-		this.$el.on(App.clickHandler, '[data-js-atom="' + this.options.paginationItemJsAtom + '"]', goTo);
+		this.$el.on('click touchstart', this.options.prev, showPrev);
+		this.$el.on('click touchstart', this.options.next, showNext);
+		this.$el.on('click touchstart', '[data-js-atom="' + this.options.paginationItemJsAtom + '"]', goTo);
 
 		// Global Events
 		if (!App.EVENTS && !App.EVENTS.resize) {
