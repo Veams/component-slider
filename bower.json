@@ -1,6 +1,6 @@
 {
 	"name": "veams-component-slider",
-	"version": "2.1.2",
+	"version": "2.2.0",
 	"ignore": [
 		".bowerrc",
 		".gitignore",
@@ -9,11 +9,11 @@
 	"authors": [
 		{
 			"name": "Sebastian Fitzner",
-			"email": "sebastian@jci-werbeagentur.com"
+			"email": "sebastian@veams.org"
 		},
 		{
 			"name": "Andy Gutsche",
-			"email": "andy@veams.com"
+			"email": "andy@veams.org"
 		}
 	],
 	"repository": {

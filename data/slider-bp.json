@@ -38,6 +38,32 @@
 					"prev": "Previous"
 				}
 			}
+		},"multipleWithGroupedPagination": {
+			"docs": {
+				"variationName": "Multiple items, grouped pagination and custom slide number",
+				"variationDescription": "By providing 'groupPaginationItems' you can group the pagination items. Furthermore you can modify the number of elements you want to slide to the left or right by using 'slideByItemNumber'."
+			},
+			"settings": {
+				"sliderContextClass": "default",
+				"sliderJsOptions": {
+					"groupPaginationItems": true,
+					"slideByItemNumber": 1,
+					"visibleItems": {
+						"desktop": 3,
+						"tablet-large": 2,
+						"tablet-small": 2,
+						"mobile-large": 2,
+						"mobile-medium": 1,
+						"mobile-small": 1
+					}
+				}
+			},
+			"content": {
+				"sliderButtons": {
+					"next": "Next",
+					"prev": "Previous"
+				}
+			}
 		},
 		"infinite": {
 			"docs": {

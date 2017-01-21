@@ -26,15 +26,16 @@ class Slider extends AppModule {
 	 */
 	constructor(obj) {
 		let options = {
-			activeClass: 'is-active',
+			activeClass: 'is-active', // Active class for slides and pagination items
 			actions: '[data-js-atom="slider-actions"]', // Previous Button
-			autoPlay: false,
-			autoPlayInterval: 3000,
-			cloneClass: 'is-cloned',
-			disablePagination: false,
-			enableTouchSwipe: true,
-			hiddenClass: 'is-hidden',
-			infinite: false,
+			autoPlay: false, // Enable autoplay
+			autoPlayInterval: 3000, // Autoplay intervall in milliseconds
+			cloneClass: 'is-cloned', // Clone class for cloned items (only used with infinite)
+			disablePagination: false, // Disable pagination display
+			enableTouchSwipe: true, // Enable/Disable swipe support
+			groupPaginationItems: false, // Group the pagination elements (useful for multiple visible items)
+			hiddenClass: 'is-hidden', // hidden class for pagination
+			infinite: false, // Infinite looping (only possible without multiple visible items)
 			items: '[data-js-atom="slider-item"]', // Slide Items
 			next: '[data-js-atom="slider-next"]', // Next Button
 			prev: '[data-js-atom="slider-prev"]', // Previous Button
@@ -42,11 +43,12 @@ class Slider extends AppModule {
 			paginationItemClass: 'slider__pagination-list-item', // Define your class which we use in our mini tmpl
 			paginationItemJsAtom: 'slider-pagination-item', // data-js-atom for pagination list item
 			paginationList: '[data-js-atom="slider-pagination-list"]', // Pagination List
-			ribbon: '[data-js-atom="slider-ribbon"]',
-			pauseOnHover: true,
-			startAtIndex: 0,
-			unresolvedClass: 'is-unresolved',
-			visibleItems: {
+			ribbon: '[data-js-atom="slider-ribbon"]', // Ribbon element
+			pauseOnHover: true, // Used when options.autoPlay is true
+			slideByItemNumber: false, // Use the option to override the initial slide step
+			startAtIndex: 0, // Start at a different index
+			unresolvedClass: 'is-unresolved', // Unresolved class which gets removed when initialized
+			visibleItems: { // Visible items per viewport
 				'desktop': 1,
 				'tablet-large': 1,
 				'tablet-small': 1,
@@ -54,7 +56,7 @@ class Slider extends AppModule {
 				'mobile-medium': 1,
 				'mobile-small': 1
 			},
-			wrapper: '[data-js-atom="slider-wrapper"]'
+			wrapper: '[data-js-atom="slider-wrapper"]' // Wrapper element
 		};
 
 		super(obj, options);
@@ -147,6 +149,10 @@ class Slider extends AppModule {
 	 */
 	get controlHeight() {
 		return Helpers.getOuterHeight(this.$prev);
+	}
+
+	get slideBy() {
+		return this.options.slideByItemNumber || this.visibles;
 	}
 
 	/**
@@ -422,16 +428,26 @@ class Slider extends AppModule {
 	/**
 	 * Add pagination elements with a simple string template and
 	 * save a pagination item reference.
-	 *
-	 * TODO: Add ES string templates
 	 */
 	addPagination() {
 		let tmpl = '';
 		let i = 0;
+		let atom = this.options.paginationItemJsAtom;
+		let itemClass = this.options.paginationItemClass;
 
 		for (i; i < this.$items.length; i++) {
-			tmpl += '<li class="' + this.options.paginationItemClass + '" data-js-atom="' +
-				this.options.paginationItemJsAtom + '" data-index="' + i + '"><strong>' + (i + 1) + '</strong></li>';
+			let idx = i + 1;
+			let hiddenClass = '';
+
+			if (this.options.groupPaginationItems) {
+				hiddenClass = i % this.visibles === 0 ? '' : this.options.hiddenClass;
+			}
+
+			tmpl += `
+					<li class="${itemClass} ${hiddenClass}" data-js-atom="${atom}" data-index="${i}">
+						<strong>${idx}</strong>
+					</li>
+					`;
 		}
 
 		this.$paginationList.append(tmpl);
@@ -478,7 +494,7 @@ class Slider extends AppModule {
 		}
 
 		if (this.clickHandler) {
-			this.goToItem(this.index + this.visibles);
+			this.goToItem(this.index + this.slideBy);
 			this.clickHandler = false;
 		}
 	}
@@ -501,7 +517,7 @@ class Slider extends AppModule {
 		}
 
 		if (this.clickHandler) {
-			this.goToItem(this.index - this.visibles);
+			this.goToItem(this.index - this.slideBy);
 			this.clickHandler = false;
 		}
 	}
@@ -617,25 +633,43 @@ class Slider extends AppModule {
 
 		this.index = i;
 
+		this.handleActivity();
+
+		if (this.infinite) {
+			this.checkSlides();
+		}
+	}
+
+	handleActivity() {
 		this.$items.removeClass(this.options.activeClass);
 
 		if (!this.paginationDisabled && this.$paginationItems && this.$paginationItems.length) {
 			this.$paginationItems.removeClass(this.options.activeClass);
 		}
 
+		// If this slider instance isn't infinite
 		if (!this.infinite) {
 			for (let idx = this.index; idx < this.index + this.visibles; idx++) {
-				this.$items.eq(idx).addClass(this.options.activeClass);
 
+				// First set active slide element(s)
+				this.$items
+					.eq(idx)
+					.addClass(this.options.activeClass);
+
+				// Do that also for pagination element(s)
 				if (!this.paginationDisabled) {
-					this.$paginationItems.eq(idx).addClass(this.options.activeClass);
+					this.$paginationItems
+						.eq(idx)
+						.addClass(this.options.activeClass);
 				}
 			}
 		}
 		else {
 			for (let idx = this.index - 1; idx < this.index - 1 + this.visibles; idx++) {
 				let slideIdx = idx;
-				this.$items.eq(slideIdx + 1).addClass(this.options.activeClass);
+				this.$items
+					.eq(slideIdx + 1)
+					.addClass(this.options.activeClass);
 
 				if (!this.paginationDisabled) {
 					if (idx >= this.$paginationItems.length) {
@@ -646,13 +680,11 @@ class Slider extends AppModule {
 						slideIdx = this.$paginationItems.length - 1;
 					}
 
-					this.$paginationItems.eq(slideIdx).addClass(this.options.activeClass);
+					this.$paginationItems
+						.eq(slideIdx)
+						.addClass(this.options.activeClass);
 				}
 			}
-		}
-
-		if (this.infinite) {
-			this.checkSlides();
 		}
 	}
 

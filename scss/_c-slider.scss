@@ -145,6 +145,10 @@ Global Styles
 		&.is-active {
 			background-color: $slider-pagination-color-active;
 		}
+
+		&.is-hidden {
+			display: none;
+		}
 	}
 }
 

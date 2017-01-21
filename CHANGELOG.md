@@ -1,3 +1,10 @@
+### v2.2.0
+- Add grouPaginationItems as new option
+- Add slideByItemNumber as new option
+
+### v2.1.1
+- Bugfix for click handler
+
 ### v2.1.0
 - Add data-index to slider
 - Refactor data structure
