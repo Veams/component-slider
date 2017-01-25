@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v2.1.0
+ * @version v2.4.0
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -73,7 +73,7 @@ class Slider extends AppModule {
 	static get info() {
 		return {
 			name: 'Slider',
-			version: '2.1.0',
+			version: '2.4.0',
 			vc: true,
 			mod: false
 		};
@@ -151,8 +151,19 @@ class Slider extends AppModule {
 		return Helpers.getOuterHeight(this.$prev);
 	}
 
+	/**
+	 * Return the defined option or current visible items
+	 * which will be used for the next and previous slide animation.
+	 */
 	get slideBy() {
 		return this.options.slideByItemNumber || this.visibles;
+	}
+
+	/**
+	 * Get ribbon width.
+	 */
+	get ribbonWidth() {
+		return this.$items.length * (this.thumbWidth);
 	}
 
 	/**
@@ -467,13 +478,13 @@ class Slider extends AppModule {
 			return;
 		}
 
-		this.index = parseInt($currentTarget.attr('data-index'), 10) || $currentTarget.index();
+		let idx = parseInt($currentTarget.attr('data-index'), 10) || $currentTarget.index();
 
 		if (this.infinite) {
-			this.index++;
+			idx = idx + this.slideBy;
 		}
 
-		this.goToItem(this.index);
+		this.goToItem(idx);
 	}
 
 	/**
@@ -713,29 +724,24 @@ class Slider extends AppModule {
 	 * Get and set dimensions for our project progress.
 	 */
 	getAndSetDimensions() {
-		this.width = this.$el.outerWidth();
+		this.resetStyles();
+		this.width = this.$wrapper.outerWidth();
 		this.thumbWidth = this.width / this.visibles;
 		this.$wrapper.css('width', this.width + 'px');
 		this.$items.css('width', this.thumbWidth + 'px');
 
 		this.$ribbon.css({
-			width: this.getRibbonWidth() + 'px'
+			width: this.ribbonWidth + 'px'
 		});
 	}
 
 	/**
-	 * Get ribbon width.
+	 * Reset width styles
 	 */
-	getRibbonWidth() {
-		let width;
-
-		if (this.$items.length <= this.visibles) {
-			width = this.$items.length * (this.thumbWidth);
-		} else {
-			width = this.$items.length * (this.thumbWidth);
-		}
-
-		return width;
+	resetStyles() {
+		this.$wrapper[0].removeAttribute('style');
+		this.$items.removeAttr('style');
+		this.$ribbon.removeAttr('style');
 	}
 }
 
