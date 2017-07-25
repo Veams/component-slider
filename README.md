@@ -11,11 +11,10 @@ The component represents a simple but powerful slider.
 
 > The slider module is a component for cycling through elements, like a carousel or slideshow. It allows users to swipe on touch-enabled devices. 
 
------------
+----------
 
 ## Requirements
-- `Veams-JS >= v4.0.0` - Basic JavaScript library. 
-- `_get-media.scss` - Contains media queries for JavaScript.
+- `Veams >= v5.0.0` - Veams Framework.
 
 -----------
 

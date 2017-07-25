@@ -44,31 +44,17 @@ import Slider from '../templating/partials/components/slider/js/slider';
 // @INSERT :: END //
 ```
 
-#### Initializing in Veams V2
+#### Initializing in Veams V5
 ``` js
-// @INSERT :: START @tag: js-init-v2 //
-/**
- * Init Slider
- */
-Helpers.loadModule({
-	el: '[data-js-module="slider"]',
-	module: Slider,
-	context: context
-});
-// @INSERT :: END //
-```
-
-#### Initializing in Veams V3
-``` js
-// @INSERT :: START @tag: js-init-v3 //
-/**
- * Init Slider
- */
-Helpers.loadModule({
-	domName: 'slider',
-	module: Slider,
-	context: context
-});
+// @INSERT :: START @tag: js-init-v5 //
+    ,
+    /**
+     * Init Slider
+     */
+    {
+        namespace: 'slider',
+        module: Slider
+    )
 // @INSERT :: END //
 ```
 

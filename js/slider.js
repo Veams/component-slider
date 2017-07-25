@@ -2,19 +2,20 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v2.4.0
+ * @version v3.0.0
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
  */
 
-import App from 'app';
-import AppModule from 'app-module';
+import { Veams } from 'app';
+import VeamsComponent from 'veams/src/js/common/component';
+import transitionEndEvent from 'veams/src/js/utils/helpers/transition-end-event'
 
-const $ = App.$;
-const Helpers = App.Helpers;
+const $ = Veams.$;
+const Helpers = Veams.helpers;
 
-class Slider extends AppModule {
+class Slider extends VeamsComponent {
 	/**
 	 * Constructor for our class
 	 *
@@ -27,7 +28,7 @@ class Slider extends AppModule {
 	constructor(obj) {
 		let options = {
 			activeClass: 'is-active', // Active class for slides and pagination items
-			actions: '[data-js-atom="slider-actions"]', // Previous Button
+			actions: '[data-js-item="slider-actions"]', // Previous Button
 			autoPlay: false, // Enable autoplay
 			autoPlayInterval: 3000, // Autoplay intervall in milliseconds
 			cloneClass: 'is-cloned', // Clone class for cloned items (only used with infinite)
@@ -36,14 +37,14 @@ class Slider extends AppModule {
 			groupPaginationItems: false, // Group the pagination elements (useful for multiple visible items)
 			hiddenClass: 'is-hidden', // hidden class for pagination
 			infinite: false, // Infinite looping (only possible without multiple visible items)
-			items: '[data-js-atom="slider-item"]', // Slide Items
-			next: '[data-js-atom="slider-next"]', // Next Button
-			prev: '[data-js-atom="slider-prev"]', // Previous Button
-			pagination: '[data-js-atom="slider-pagination"]', // Pagination
+			items: '[data-js-item="slider-item"]', // Slide Items
+			next: '[data-js-item="slider-next"]', // Next Button
+			prev: '[data-js-item="slider-prev"]', // Previous Button
+			pagination: '[data-js-item="slider-pagination"]', // Pagination
 			paginationItemClass: 'slider__pagination-list-item', // Define your class which we use in our mini tmpl
-			paginationItemJsAtom: 'slider-pagination-item', // data-js-atom for pagination list item
-			paginationList: '[data-js-atom="slider-pagination-list"]', // Pagination List
-			ribbon: '[data-js-atom="slider-ribbon"]', // Ribbon element
+			paginationItemJsItem: 'slider-pagination-item', // data-js-item for pagination list item
+			paginationList: '[data-js-item="slider-pagination-list"]', // Pagination List
+			ribbon: '[data-js-item="slider-ribbon"]', // Ribbon element
 			pauseOnHover: true, // Used when options.autoPlay is true
 			slideByItemNumber: false, // Use the option to override the initial slide step
 			startAtIndex: 0, // Start at a different index
@@ -56,11 +57,10 @@ class Slider extends AppModule {
 				'mobile-medium': 1,
 				'mobile-small': 1
 			},
-			wrapper: '[data-js-atom="slider-wrapper"]' // Wrapper element
+			wrapper: '[data-js-item="slider-wrapper"]' // Wrapper element
 		};
 
 		super(obj, options);
-		App.registerModule && App.registerModule(Slider.info, this.el);
 	}
 
 	/**
@@ -72,8 +72,7 @@ class Slider extends AppModule {
 	 */
 	static get info() {
 		return {
-			name: 'Slider',
-			version: '2.4.0',
+			version: '3.0.0',
 			vc: true,
 			mod: false
 		};
@@ -166,6 +165,58 @@ class Slider extends AppModule {
 		return this.$items.length * (this.thumbWidth);
 	}
 
+	/** =================================================
+	 * EVENTS
+	 * ================================================ */
+
+	/**
+	 * Bind local events to this.$el.
+	 */
+	get events() {
+		return {
+			'click {{this.options.prev}}': 'showPrevElement',
+			'touchstart {{this.options.prev}}': 'showPrevElement',
+			'click {{this.options.next}}': 'showNextElement',
+			'touchstart {{this.options.next}}': 'showNextElement',
+			'click {{this.paginationItemSel}}': 'navigateToElement',
+			'touchstart {{this.paginationItemSel}}': 'navigateToElement'
+		};
+	}
+
+	/**
+	 * Subscribe to global events of Veams or App namespace.
+	 */
+	get subscribe() {
+		return {
+			'{{Veams.EVENTS.resize}}': 'render'
+		};
+	}
+	
+	/**
+	 * Bind all events
+	 */
+	bindEvents() {
+		if (this.autoPlay && this.options.pauseOnHover) {
+			this.registerEvent('{{Veams.EVENTS.mouseenter}}', 'pause');
+			this.registerEvent('{{Veams.EVENTS.mouseleave}}', 'play');
+		}
+	}
+
+	/**
+	 * Unbind all events
+	 */
+	unbindEvents() {
+		// Global Events
+		Veams.Vent.off(Veams.EVENTS.resize);
+
+		// Local Events
+		this.$el.off(Veams.clickHandler);
+	}
+
+	/** =================================================
+	 * STANDARD METHODS
+	 * ================================================= */
+
 	/**
 	 * Initialize the view
 	 */
@@ -186,6 +237,8 @@ class Slider extends AppModule {
 		this.touchSwipeEnabled = false;
 		this.clickHandler = true;
 		this.autoPlay = this.options.autoPlay && this.infinite;
+		this.paginationItemSel = '[data-js-item="' + this.options.paginationItemJsItem + '"]';
+
 
 		if (!this.paginationDisabled) {
 			this.$paginationList = this.$el.find(this.options.paginationList);
@@ -207,57 +260,60 @@ class Slider extends AppModule {
 				}
 			}
 		}
-
-		super.initialize();
 	}
 
 	/**
-	 * Bind all events
+	 * Renders the view's template to the UI
 	 */
-	bindEvents() {
-		let render = this.render.bind(this);
-		let showPrev = this.showPrevElement.bind(this);
-		let showNext = this.showNextElement.bind(this);
-		let goTo = this.navigateToElement.bind(this);
-		let play = this.play.bind(this);
-		let pause = this.pause.bind(this);
-
-		// Local Events
-		this.$el.on('click touchstart', this.options.prev, showPrev);
-		this.$el.on('click touchstart', this.options.next, showNext);
-		this.$el.on('click touchstart', '[data-js-atom="' + this.options.paginationItemJsAtom + '"]', goTo);
-
-		// Global Events
-		if (!App.EVENTS && !App.EVENTS.resize) {
-			console.warn('Slider: App.EVENTS.resize is missing!');
+	render() {
+		if (!Veams.currentMedia) {
+			console.warn('Slider: Veams.currentMedia is necessary to support the slider module!');
 			return;
 		}
 
-		App.Vent.on(App.EVENTS.resize, render);
+		if (this.$clonedLast && this.$clonedFirst) {
+			this.$clonedLast.remove();
+			this.$clonedFirst.remove();
+			this.$items = this.$initialItems;
+		}
 
-		if (this.autoPlay && this.options.pauseOnHover) {
+		this.visibles = this.infinite ? 1 : this.options.visibleItems[Veams.currentMedia];
+		this.itemsLength = this.$items.length;
 
-			if (App.EVENTS.mouseenter && App.EVENTS.mouseleave) {
-				this.$el.on(App.EVENTS.mouseenter, pause);
-				this.$el.on(App.EVENTS.mouseleave, play);
-			} else {
-				console.warn(
-					'Slider: App.EVENTS.mouseEnter and/or App.EVENTS.mouseLeave missing - option "pauseOnHover" will be ignored!');
-			}
+		this.handleVisibility();
+
+		if (!this.paginationDisabled) {
+			this.removePagination();
+			this.addPagination();
+		}
+
+		if (this.infinite) {
+			this.infiniteLoop();
+		}
+
+		this.bindTransitions();
+		this.getAndSetDimensions();
+
+		if (Veams.detections.touch && this.options.enableTouchSwipe && !this.touchSwipeEnabled) {
+			this.bindSwipes();
+		}
+
+		if (this.infinite) {
+			this.goToItem(this.startAtIndex + this.visibles);
+		}
+		else {
+			this.goToItem(this.startAtIndex);
+		}
+
+		if (this.autoPlay && this.paused) {
+			this.play();
 		}
 	}
-
-	/**
-	 * Unbind all events
-	 */
-	unbindEvents() {
-		// Global Events
-		App.Vent.off(App.EVENTS.resize);
-
-		// Local Events
-		this.$el.off(App.clickHandler);
-	}
-
+	
+	/** =================================================
+	 * CUSTOM SLIDER METHODS
+	 * ================================================= */
+	
 	/**
 	 * Bind transition events
 	 *
@@ -266,8 +322,8 @@ class Slider extends AppModule {
 		let onRibbonTransitionEnd = this.onRibbonTransitionEnd.bind(this);
 		let onItemsTransitionEnd = this.onItemsTransitionEnd.bind(this);
 
-		this.$ribbon.on(Helpers.transitionEndEvent(), onRibbonTransitionEnd);
-		this.$items.on(Helpers.transitionEndEvent(), onItemsTransitionEnd);
+		this.$ribbon.on(transitionEndEvent(), onRibbonTransitionEnd);
+		this.$items.on(transitionEndEvent(), onItemsTransitionEnd);
 	}
 
 	/**
@@ -290,7 +346,6 @@ class Slider extends AppModule {
 				this.play();
 			}
 		}
-
 
 		if (this.$clonedFirst && this.$clonedFirst.hasClass(this.options.activeClass)) {
 			this.$clonedFirst.removeClass(this.options.activeClass);
@@ -325,55 +380,6 @@ class Slider extends AppModule {
 		e.stopPropagation();
 	}
 
-
-	/**
-	 * Renders the view's template to the UI
-	 */
-	render() {
-		if (!App.currentMedia) {
-			console.warn('Slider: App.currentMedia is necessary to support the slider module!');
-			return;
-		}
-
-		if (this.$clonedLast && this.$clonedFirst) {
-			this.$clonedLast.remove();
-			this.$clonedFirst.remove();
-			this.$items = this.$initialItems;
-		}
-
-		this.visibles = this.infinite ? 1 : this.options.visibleItems[App.currentMedia];
-		this.itemsLength = this.$items.length;
-
-		this.handleVisibility();
-
-		if (!this.paginationDisabled) {
-			this.removePagination();
-			this.addPagination();
-		}
-
-		if (this.infinite) {
-			this.infiniteLoop();
-		}
-
-		this.bindTransitions();
-		this.getAndSetDimensions();
-
-		if (App.support.touch && this.options.enableTouchSwipe && !this.touchSwipeEnabled) {
-			this.bindSwipes();
-		}
-
-		if (this.infinite) {
-			this.goToItem(this.startAtIndex + this.visibles);
-		}
-		else {
-			this.goToItem(this.startAtIndex);
-		}
-
-		if (this.autoPlay && this.paused) {
-			this.play();
-		}
-	}
-
 	/**
 	 * Clone first and last element
 	 *
@@ -381,6 +387,11 @@ class Slider extends AppModule {
 	infiniteLoop() {
 		this.$clonedFirst = this.$firstItem.clone(true).addClass(this.options.cloneClass);
 		this.$clonedLast = this.$lastItem.clone(true).addClass(this.options.cloneClass);
+
+		if (this.options.infinite) {
+			this.$clonedFirst.find(this.paginationItemSel).attr('data-index', this.itemsLength);
+			this.$clonedLast.find(this.paginationItemSel).attr('data-index', -1);
+		}
 
 		this.$firstItem.before(this.$clonedLast);
 		this.$lastItem.after(this.$clonedFirst);
@@ -443,7 +454,7 @@ class Slider extends AppModule {
 	addPagination() {
 		let tmpl = '';
 		let i = 0;
-		let atom = this.options.paginationItemJsAtom;
+		let item = this.options.paginationItemJsItem;
 		let itemClass = this.options.paginationItemClass;
 
 		for (i; i < this.$items.length; i++) {
@@ -455,14 +466,14 @@ class Slider extends AppModule {
 			}
 
 			tmpl += `
-					<li class="${itemClass} ${hiddenClass}" data-js-atom="${atom}" data-index="${i}">
+					<li class="${itemClass} ${hiddenClass}" data-js-item="${item}" data-index="${i}">
 						<strong>${idx}</strong>
 					</li>
 					`;
 		}
 
 		this.$paginationList.append(tmpl);
-		this.$paginationItems = $('[data-js-atom="' + this.options.paginationItemJsAtom + '"]', this.$el);
+		this.$paginationItems = $('[data-js-item="' + this.options.paginationItemJsItem + '"]', this.$el);
 	}
 
 	/**
@@ -550,7 +561,7 @@ class Slider extends AppModule {
 		if (this.$items.length > this.visibles) {
 			Helpers.detectSwipe(this.el, 75);
 
-			this.$el.on(App.EVENTS.swipe, (e) => {
+			this.$el.on(Veams.EVENTS.swipe, (e) => {
 				let direction = e.detail.direction;
 
 				if (direction === 'left') {

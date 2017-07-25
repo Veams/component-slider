@@ -7,7 +7,7 @@ publish: false
      data-js-options='{{stringify options.settings.sliderJsOptions}}'{{/if}}>
 
 	{{#with options.content.sliderButtons}}
-		<div class="slider__controls-wrapper" data-js-atom="slider-actions">
+		<div class="slider__controls-wrapper" data-js-item="slider-actions">
 			{{> c-slider__controls }}
 		</div>
 	{{/with}}
@@ -17,7 +17,7 @@ publish: false
 	</div>
 
 	{{#unless options.settings.sliderHidePagination}}
-		<div class="slider__pagination-wrapper" data-js-atom="slider-pagination">
+		<div class="slider__pagination-wrapper" data-js-item="slider-pagination">
 			{{> c-slider__pagination }}
 		</div>
 	{{/unless}}
