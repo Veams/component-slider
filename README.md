@@ -69,7 +69,7 @@ The partial is a `wrapWith` partial.
 The module gives you the possibility to override default options: 
 
 - activeClass {`String`} ['is-active'] - _Class for the active slide._
-- actions {`String`} ['[data-js-atom="slider-actions"]'] - _Actions wrapper element in the component._
+- actions {`String`} ['[data-js-item="slider-actions"]'] - _Actions wrapper element in the component._
 - autoPlay {`Boolean`} [false] - _Enable autoplay option of the slider._
 - autoPlayInterval {`Number`} [3000] - _Autoplay speed in milliseconds._
 - cloneClass {`String`} ['is-cloned'] - _For the infinite slider the last and first element get cloned. The cloning class can be overriden._
@@ -78,20 +78,20 @@ The module gives you the possibility to override default options:
 - groupPaginationItems {`Boolean`} [true] - _Enable the grouping of pagination items._
 - hiddenClass {`String`} ['is-hidden'] - _The hidden class used by handling the visibility of the slider._
 - infinite {`Boolean`} ['is-closed'] - _The slider will be set in infinite mode. Can not be used with multiple active slide items._
-- items {`String`} ['[data-js-atom="slider-item"]'] - _Define the slide item element._
-- next {`String`} ['[data-js-atom="slider-next"]'] - _Define the next button element._
-- prev {`String`} ['[data-js-atom="slider-prev"]'] - _Define the prev button element._
-- pagination {`String`} ['[data-js-atom="slider-pagination"]'] - _Define the pagination element in which the pagination items are generated in._
+- items {`String`} ['[data-js-item="slider-item"]'] - _Define the slide item element._
+- next {`String`} ['[data-js-item="slider-next"]'] - _Define the next button element._
+- prev {`String`} ['[data-js-item="slider-prev"]'] - _Define the prev button element._
+- pagination {`String`} ['[data-js-item="slider-pagination"]'] - _Define the pagination element in which the pagination items are generated in._
 - paginationItemClass {`String`} ['slider__pagination-list-item'] - _Class for the generated pagination item._
 - paginationItemJsAtom {`String`} ['slider-pagination-item'] - _Data attribute for the generated pagination item._
-- paginationList {`String`} ['[data-js-atom="slider-pagination-list"]'] - _Define the pagination list element in which the pagination items are generated in._
-- ribbon {`String`} ['[data-js-atom="slider-ribbon"]'] - _Define the slider ribbon which is holding all slides and gets the full width._
+- paginationList {`String`} ['[data-js-item="slider-pagination-list"]'] - _Define the pagination list element in which the pagination items are generated in._
+- ribbon {`String`} ['[data-js-item="slider-ribbon"]'] - _Define the slider ribbon which is holding all slides and gets the full width._
 - pauseOnHover {`Boolean`} [true] - _When `autoplay` is set you can enable/disable pause on hover._
 - slideByItemNumber {`Number`} [false] - _You can use the option to override the initial slide step which is the number of current visible items._
 - startAtIndex {`Number`} [0] - _Start index for the slider._
 - openIndex {`Number`} [null] - _Index of panel to be opened on init (zero based)._
 - visibleItems {`Object`} [ {'desktop': 1, 'tablet-large': 1, 'tablet-small': 1, 'mobile-large': 1, 'mobile-medium': 1, 'mobile-small': 1} ] - _Define how many slide items should be visible on different viewports._
-- wrapper {`String`} ['[data-js-atom="slider-wrapper"]'] - _Define the slider wrapper element._
+- wrapper {`String`} ['[data-js-item="slider-wrapper"]'] - _Define the slider wrapper element._
 
 ------------
 
