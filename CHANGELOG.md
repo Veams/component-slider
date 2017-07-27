@@ -1,3 +1,6 @@
+### v3.0.1
+- Fix bug in INSERTPOINTS
+
 ### v3.0.0
 - Update source code to support Veams 5 framework
 

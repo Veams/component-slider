@@ -54,7 +54,7 @@ import Slider from '../templating/partials/components/slider/js/slider';
     {
         namespace: 'slider',
         module: Slider
-    )
+    }
 // @INSERT :: END //
 ```
 

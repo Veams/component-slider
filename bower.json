@@ -1,6 +1,6 @@
 {
 	"name": "veams-component-slider",
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"ignore": [
 		".bowerrc",
 		".gitignore",
