@@ -1,3 +1,6 @@
+### v3.0.3
+- Fix duplicate sliderContextClass issue
+
 ### v3.0.2
 - Update readme
 
