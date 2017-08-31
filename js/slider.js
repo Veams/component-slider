@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v4.0.0
+ * @version v4.0.1
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -72,7 +72,7 @@ class Slider extends VeamsComponent {
 	 */
 	static get info() {
 		return {
-			version: '4.0.0',
+			version: '4.0.1',
 			vc: true,
 			mod: false
 		};
