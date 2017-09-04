@@ -1,5 +1,5 @@
 <p align='right'>
-    <a href='https://badge.fury.io/bo/veams-component-slider'><img src='https://badge.fury.io/bo/veams-component-slider.svg' alt='Bower version' height='20'></a>
+    <a href="https://badge.fury.io/js/veams-component-slider"><img src="https://badge.fury.io/js/veams-component-slider.svg" alt="npm version" height="18"></a>
     <a href='https://gitter.im/Sebastian-Fitzner/Veams?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge'><img src='https://badges.gitter.im/Sebastian-Fitzner/Veams.svg' alt='Gitter Chat' /></a>
 </p>
 
@@ -23,10 +23,6 @@ The component represents a simple but powerful slider.
 ### Installation with Veams
 
 `veams install vc slider`
-
-### Installation with Bower
-
-`bower install veams-component-slider --save`
 
 ----------- 
 
