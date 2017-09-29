@@ -1,3 +1,7 @@
+### v5.0.0
+- Update folder structure to be in sync with latest generator output
+- Remove import snippets from INSERTPOINTS.md
+
 ### v4.0.1
 - Fix duplicate sliderContextClass issue
 

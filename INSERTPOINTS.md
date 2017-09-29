@@ -1,3 +1,4 @@
+## Usage
 
 ### Include: Page
 
@@ -21,24 +22,10 @@
 {{! @INSERT :: END }}
 ```
 
-### Include: SCSS
-
-``` scss
-// @INSERT :: START @tag: scss-self-contained-import //
-@import "../components/slider/scss/_c-slider";
-// @INSERT :: END //
-```
-
 ### Include: JavaScript
 
-#### Import
-``` js
-// @INSERT :: START @tag: js-self-contained-import //
-import Slider from '../components/slider/js/slider';
-// @INSERT :: END //
-```
-
 #### Initializing in Veams V5
+
 ``` js
 // @INSERT :: START @tag: js-init-v5 //
     ,
@@ -53,6 +40,7 @@ import Slider from '../components/slider/js/slider';
 ```
 
 #### Custom Events
+
 ``` js
 // @INSERT :: START @tag: js-events //
 /**

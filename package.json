@@ -1,6 +1,6 @@
 {
 	"name": "veams-component-slider",
-	"version": "4.0.1",
+	"version": "5.0.0",
 	"description": "The component represents a simple but powerful slider.",
 	"repository": {
 		"type": "git",

@@ -1,0 +1,19 @@
+{
+	"type": "component",
+	"displayName": "c-slider",
+	"contextData": "slider-bp",
+	"layout": "lyt-docs",
+	"subTemplates": [
+		"c-slider.hbs",
+		"c-slider__controls.hbs",
+		"c-slider__item.hbs",
+		"c-slider__list.hbs",
+		"c-slider__pagination.hbs"
+	],
+	"scssFiles": [
+		"_c-slider.scss"
+	],
+	"jsFiles": [
+		"slider.js"
+	]
+}
