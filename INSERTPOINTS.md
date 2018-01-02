@@ -6,11 +6,11 @@
 {{! @INSERT :: START @id: slider, @tag: component-partial }}
 {{#with slider-bp.variations.simple}}
     {{! wrapWith START: Slider }}
-    {{#wrapWith "c-slider" settings=this.settings content=this.content}}
+    {{#wrapWith "slider" settings=this.settings content=this.content}}
         {{! WrapWith START: Slider List }}
-        {{#wrapWith "c-slider__list"}}
+        {{#wrapWith "slider__list"}}
             {{#times 8}}
-                {{#wrapWith "c-slider__item"}}
+                {{#wrapWith "slider__item"}}
                     <img src="https://placehold.it/1920x800" alt="test">
                 {{/wrapWith}}
             {{/times}}
@@ -28,14 +28,8 @@
 
 ``` js
 // @INSERT :: START @tag: js-init-v5 //
-    ,
-    /**
-     * Init Slider
-     */
-    {
-        namespace: 'slider',
-        module: Slider
-    }
+	// Init Slider
+	Veams.modules.add({ namespace: 'slider', module: Slider });
 // @INSERT :: END //
 ```
 

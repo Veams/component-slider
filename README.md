@@ -28,7 +28,7 @@ The component represents a simple but powerful slider.
 
 ## Fields
 
-### `c-slider.hbs`
+### `slider.hbs`
 
 The partial is a `wrapWith` partial.
 
@@ -39,14 +39,14 @@ The partial is a `wrapWith` partial.
 - settings.sliderInnerFullWidth {`Boolean`} [false] - _Delete the class `.is-container` from `.slider__content`._
 - settings.sliderHidePagination {`Boolean`} [false] - _Hide the pagination when set to true._
 
-### `c-slider__controls.hbs`
+### `slider__controls.hbs`
 
 #### Content
 - content.sliderButtons {`Object`} - _Contains the controls content. When the object is not defined, the controls will not be printed out._
 - content.sliderButtons.prev {`String`} - _Define the button text for the previous button._
 - content.sliderButtons.next {`String`} - _Define the button text for the next button._
 
-### `c-slider__list.hbs`
+### `slider__list.hbs`
 
 The partial is a `wrapWith` partial.
 
@@ -54,7 +54,7 @@ The partial is a `wrapWith` partial.
 - settings.sliderOverflow {`Boolean`} - _Set this option to `true` if you want to add the class `.is-overflow` which gives you the possibility to show all hidden items next to the active element(s)._
 
 
-### `c-slider__item.hbs`
+### `slider__item.hbs`
 
 The partial is a `wrapWith` partial.
 

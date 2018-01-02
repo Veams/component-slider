@@ -1,6 +1,3 @@
----
-publish: false
----
 <div class="c-slider{{#if options.settings.sliderContextClass}}--{{options.settings.sliderContextClass}}{{else}}--default{{/if}}{{#if options.settings.sliderClasses}} {{options.settings.sliderClasses}}{{/if}}"
      data-css="c-slider"
      data-js-module="slider"{{#if options.settings.sliderJsOptions}}
@@ -8,7 +5,7 @@ publish: false
 
 	{{#with options.content.sliderButtons}}
 		<div class="slider__controls-wrapper" data-js-item="slider-actions">
-			{{> c-slider__controls }}
+			{{> slider__controls }}
 		</div>
 	{{/with}}
 
@@ -18,7 +15,7 @@ publish: false
 
 	{{#unless options.settings.sliderHidePagination}}
 		<div class="slider__pagination-wrapper" data-js-item="slider-pagination">
-			{{> c-slider__pagination }}
+			{{> slider__pagination }}
 		</div>
 	{{/unless}}
 </div>

@@ -2,18 +2,18 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v5.0.0
+ * @version v5.1.0
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
  */
 
-import { Veams } from 'app';
-import VeamsComponent from 'veams/src/js/common/component';
-import transitionEndEvent from 'veams/src/js/utils/helpers/transition-end-event'
+import { Veams } from 'app.veams';
+import VeamsComponent from 'veams/lib/common/component';
+import transitionEndEvent from 'veams-helpers/lib/detection/transitionEndEvent';
+import detectSwipe from 'veams-helpers/lib/detection/detectSwipe';
 
 const $ = Veams.$;
-const Helpers = Veams.helpers;
 
 class Slider extends VeamsComponent {
 	/**
@@ -72,7 +72,7 @@ class Slider extends VeamsComponent {
 	 */
 	static get info() {
 		return {
-			version: '5.0.0',
+			version: '5.1.0',
 			vc: true,
 			mod: false
 		};
@@ -147,7 +147,7 @@ class Slider extends VeamsComponent {
 	 * Get controls height.
 	 */
 	get controlHeight() {
-		return Helpers.getOuterHeight(this.$prev);
+		return this.$prev.outerHeight();
 	}
 
 	/**
@@ -559,7 +559,7 @@ class Slider extends VeamsComponent {
 	bindSwipes() {
 
 		if (this.$items.length > this.visibles) {
-			Helpers.detectSwipe(this.el, 75);
+			detectSwipe(this.el, 75);
 
 			this.$el.on(Veams.EVENTS.swipe, (e) => {
 				let direction = e.detail.direction;
