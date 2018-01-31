@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v5.1.0
+ * @version v5.1.1
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -10,8 +10,8 @@
 
 import { Veams } from 'app.veams';
 import VeamsComponent from 'veams/lib/common/component';
-import transitionEndEvent from 'veams-helpers/lib/detection/transitionEndEvent';
-import detectSwipe from 'veams-helpers/lib/detection/detectSwipe';
+import transitionEndEvent from 'veams-helpers/lib/detection/transition-end-event';
+import detectSwipe from 'veams-helpers/lib/detection/detect-swipe';
 
 const $ = Veams.$;
 
@@ -51,11 +51,11 @@ class Slider extends VeamsComponent {
 			unresolvedClass: 'is-unresolved', // Unresolved class which gets removed when initialized
 			visibleItems: { // Visible items per viewport
 				'desktop': 1,
-				'tablet-large': 1,
-				'tablet-small': 1,
-				'mobile-large': 1,
-				'mobile-medium': 1,
-				'mobile-small': 1
+				'tablet-l': 1,
+				'tablet-s': 1,
+				'mobile-l': 1,
+				'mobile-m': 1,
+				'mobile-s': 1
 			},
 			wrapper: '[data-js-item="slider-wrapper"]' // Wrapper element
 		};
@@ -72,7 +72,7 @@ class Slider extends VeamsComponent {
 	 */
 	static get info() {
 		return {
-			version: '5.1.0',
+			version: '5.1.1',
 			vc: true,
 			mod: false
 		};
