@@ -2,16 +2,15 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v5.1.1
+ * @version v5.1.2
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
  */
-
 import { Veams } from 'app.veams';
-import VeamsComponent from 'veams/lib/common/component';
-import transitionEndEvent from 'veams-helpers/lib/detection/transition-end-event';
-import detectSwipe from 'veams-helpers/lib/detection/detect-swipe';
+import VeamsComponent from 'veams/src/js/common/component';
+import transitionEndEvent from '@veams/helpers/lib/detection/transition-end-event';
+import detectSwipe from '@veams/helpers/lib/detection/detect-swipe';
 
 const $ = Veams.$;
 
@@ -191,7 +190,7 @@ class Slider extends VeamsComponent {
 			'{{Veams.EVENTS.resize}}': 'render'
 		};
 	}
-	
+
 	/**
 	 * Bind all events
 	 */
@@ -221,14 +220,13 @@ class Slider extends VeamsComponent {
 	 * Initialize the view
 	 */
 	initialize() {
-		this.index = 0;
+		this.index = ~~this.options.startAtIndex || 0;
 		this.$prev = this.$el.find(this.options.prev);
 		this.$next = this.$el.find(this.options.next);
 		this.$items = this.$el.find(this.options.items);
 		this.$initialItems = this.$items;
 		this.$wrapper = this.$el.find(this.options.wrapper);
 		this.$ribbon = this.$el.find(this.options.ribbon);
-		this.startAtIndex = ~~this.options.startAtIndex;
 		this.$lastItem = this.$items.eq(this.$items.length - 1);
 		this.$firstItem = this.$items.eq(0);
 		this.transition = this.$ribbon.css('transition');
@@ -238,7 +236,6 @@ class Slider extends VeamsComponent {
 		this.clickHandler = true;
 		this.autoPlay = this.options.autoPlay && this.infinite;
 		this.paginationItemSel = '[data-js-item="' + this.options.paginationItemJsItem + '"]';
-
 
 		if (!this.paginationDisabled) {
 			this.$paginationList = this.$el.find(this.options.paginationList);
@@ -252,7 +249,7 @@ class Slider extends VeamsComponent {
 
 			for (let item in this.options.visibleItems) {
 				if (this.options.visibleItems.hasOwnProperty(item)) {
-					if (this.options.visibleItems[item] > 1) {
+					if (this.options.visibleItems[ item ] > 1) {
 						console.warn(
 							'Slider: Sorry - option "visibleItems" has no effect while option "infinite" is set to true!');
 						break;
@@ -277,7 +274,7 @@ class Slider extends VeamsComponent {
 			this.$items = this.$initialItems;
 		}
 
-		this.visibles = this.infinite ? 1 : this.options.visibleItems[Veams.currentMedia];
+		this.visibles = this.infinite ? 1 : this.options.visibleItems[ Veams.currentMedia ];
 		this.itemsLength = this.$items.length;
 
 		this.handleVisibility();
@@ -289,6 +286,7 @@ class Slider extends VeamsComponent {
 
 		if (this.infinite) {
 			this.infiniteLoop();
+			this.index = this.index === 0 ? this.index + this.visibles : this.index;
 		}
 
 		this.bindTransitions();
@@ -298,22 +296,17 @@ class Slider extends VeamsComponent {
 			this.bindSwipes();
 		}
 
-		if (this.infinite) {
-			this.goToItem(this.startAtIndex + this.visibles);
-		}
-		else {
-			this.goToItem(this.startAtIndex);
-		}
+		this.goToItem(this.index);
 
 		if (this.autoPlay && this.paused) {
 			this.play();
 		}
 	}
-	
+
 	/** =================================================
 	 * CUSTOM SLIDER METHODS
 	 * ================================================= */
-	
+
 	/**
 	 * Bind transition events
 	 *
@@ -550,7 +543,7 @@ class Slider extends VeamsComponent {
 	 * @param {number} index - Index of the pagination element.
 	 */
 	getDirection(index) {
-		return index > this.index ? "next" : "prev";
+		return index > this.index ? 'next' : 'prev';
 	}
 
 	/**
@@ -750,7 +743,7 @@ class Slider extends VeamsComponent {
 	 * Reset width styles
 	 */
 	resetStyles() {
-		this.$wrapper[0].removeAttribute('style');
+		this.$wrapper[ 0 ].removeAttribute('style');
 		this.$items.removeAttr('style');
 		this.$ribbon.removeAttr('style');
 	}
