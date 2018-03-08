@@ -25,8 +25,9 @@ Global Styles
 
 [data-js-module~="slider"] {
 	clear: both;
-	display: block;
+	display: inline-block;
 	position: relative;
+	width: 100%;
 
 	/*
 	Unresolved state
@@ -63,12 +64,13 @@ Global Styles
 	}
 
 	.slider__item {
-		@include float;
+		@include float();
 
 		position: relative;
-		opacity: 0.3;
+		opacity: .3;
 		transition: opacity $slider-duration $slider-ease-method;
 		vertical-align: top;
+		line-height: 0;
 
 		&.is-active {
 			opacity: 1;
@@ -118,7 +120,7 @@ Global Styles
 	.slider__pagination-wrapper {
 		@include centering(h);
 
-		bottom: -$slider-pagination-size;
+		bottom: $slider-pagination-size;
 	}
 
 	.slider__pagination-list {
@@ -156,5 +158,4 @@ Global Styles
 Context: Default
 --------------------------------------------------- */
 .c-slider--default {
-	@extend %float;
 }

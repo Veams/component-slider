@@ -1,3 +1,16 @@
+## Namespaced Versions
+
+### v1.0.0
+
+- Migrate to use 
+
+	**@veams/component**, **@veams/helpers** and **@veams/query**
+
+------------------
+
+## Old Versions 
+
+
 ### v5.1.1
 - Fix imports for detectSwipe and transitionEndEvent
 - Fix getMedia keys for option 'visibleItems'

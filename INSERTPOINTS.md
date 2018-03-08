@@ -24,12 +24,12 @@
 
 ### Include: JavaScript
 
-#### Initializing in Veams V5
+#### Initializing with `@veams/modules`
 
 ``` js
 // @INSERT :: START @tag: js-init-v5 //
-	// Init Slider
-	Veams.modules.add({ namespace: 'slider', module: Slider });
+// Init Slider
+Veams.modules.add({ namespace: 'slider', module: Slider });
 // @INSERT :: END //
 ```
 
