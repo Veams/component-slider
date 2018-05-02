@@ -1,6 +1,7 @@
 {
 	"type": "component",
-	"contextData": "slider-bp",
+	"contextData": "slider",
+	"displayName": "slider",
 	"layout": "lyt-docs",
 	"subTemplates": [
 		"slider.hbs",

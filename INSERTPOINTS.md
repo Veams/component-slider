@@ -4,7 +4,7 @@
 
 ``` hbs
 {{! @INSERT :: START @id: slider, @tag: component-partial }}
-{{#with slider-bp.variations.simple}}
+{{#with slider.variations.simple}}
     {{! wrapWith START: Slider }}
     {{#wrapWith "slider" settings=this.settings content=this.content}}
         {{! WrapWith START: Slider List }}
@@ -27,7 +27,7 @@
 #### Initializing with `@veams/modules`
 
 ``` js
-// @INSERT :: START @tag: js-init-v5 //
+// @INSERT :: START @tag: js-init-@1 //
 // Init Slider
 Veams.modules.add({ namespace: 'slider', module: Slider });
 // @INSERT :: END //

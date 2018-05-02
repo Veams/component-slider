@@ -482,7 +482,7 @@ class Slider extends Component {
 	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
 	navigateToElement(e, currentTarget) {
-		let $currentTarget = $(e.currentTarget);
+		let $currentTarget = $(currentTarget);
 
 		if ($currentTarget.hasClass(this.options.activeClass)) {
 			return;
@@ -504,7 +504,7 @@ class Slider extends Component {
 	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
 	showNextElement(e, currentTarget) {
-		const $currentTarget = $(e.currentTarget);
+		const $currentTarget = $(currentTarget);
 
 		if (e && typeof e.preventDefault === 'function') {
 			e.preventDefault();
@@ -527,7 +527,7 @@ class Slider extends Component {
 	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
 	showPrevElement(e, currentTarget) {
-		const $currentTarget = $(e.currentTarget);
+		const $currentTarget = $(currentTarget);
 
 		if (e && typeof e.preventDefault === 'function') {
 			e.preventDefault();
