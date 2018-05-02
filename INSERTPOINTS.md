@@ -27,7 +27,7 @@
 #### Initializing with `@veams/modules`
 
 ``` js
-// @INSERT :: START @tag: js-init-@1 //
+// @INSERT :: START @tag: js-init-modules-@1 //
 // Init Slider
 Veams.modules.add({ namespace: 'slider', module: Slider });
 // @INSERT :: END //
