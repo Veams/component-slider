@@ -1,8 +1,9 @@
 {
 	"variations": {
+		// My simple version
 		"simple": {
 			"docs": {
-				"variationName": "Default Slider"
+				"variationName": "Default Slider" // Is shown in documentation
 			},
 			"settings": {
 				"sliderContextClass": "default"
@@ -21,14 +22,16 @@
 			},
 			"settings": {
 				"sliderContextClass": "default",
-				"sliderJsOptions": {
+				"sliderJsOptions": { // Just provide to options as simple object, it gets stringified by a helper automatically
 					"visibleItems": {
-						"desktop": 3,
-						"tablet-large": 2,
-						"tablet-small": 2,
-						"mobile-large": 2,
-						"mobile-medium": 1,
-						"mobile-small": 1
+						"mobile-s": 1,
+						"mobile-m": 1,
+						"mobile-l": 2,
+						"tablet-s": 2,
+						"tablet-l": 2,
+						"desktop-s": 3,
+						"desktop-m": 3,
+						"desktop-l": 3
 					}
 				}
 			},
@@ -49,12 +52,14 @@
 					"groupPaginationItems": true,
 					"slideByItemNumber": 1,
 					"visibleItems": {
-						"desktop": 3,
-						"tablet-large": 2,
-						"tablet-small": 2,
-						"mobile-large": 2,
-						"mobile-medium": 1,
-						"mobile-small": 1
+						"mobile-s": 1,
+						"mobile-m": 1,
+						"mobile-l": 2,
+						"tablet-s": 2,
+						"tablet-l": 2,
+						"desktop-s": 3,
+						"desktop-m": 3,
+						"desktop-l": 3
 					}
 				}
 			},
@@ -104,7 +109,7 @@
 		},
 		"autoplay": {
 			"docs": {
-				"variationName": "Slider with autoPlay option",
+				"variationName": "Slider with AutoPlay option",
 				"variationDescription": "The autoPlay option gives you the possibility to cycle through your slides automatically by a defined interval. You need to make sure to enable the infinite option. On hover the sliding stops."
 			},
 			"settings": {

@@ -2,20 +2,44 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v3.0.3
+ * @version v1.0.0
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
  */
+import $ from '@veams/query';
+import Component from '@veams/component';
+import transitionEndEvent from '@veams/helpers/lib/detection/transition-end-event';
+import detectSwipe from '@veams/helpers/lib/detection/detect-swipe';
 
-import { Veams } from 'app';
-import VeamsComponent from 'veams/src/js/common/component';
-import transitionEndEvent from 'veams/src/js/utils/helpers/transition-end-event'
+class Slider extends Component {
+	/**
+	 * General Properties
+	 */
 
-const $ = Veams.$;
-const Helpers = Veams.helpers;
+	// Elements in Markup
+	$el = $(this.el);
+	$prev = this.$el.find(this.options.prev);
+	$next = this.$el.find(this.options.next);
+	$items = this.$el.find(this.options.items);
+	$initialItems = this.$items;
+	$wrapper = this.$el.find(this.options.wrapper);
+	$ribbon = this.$el.find(this.options.ribbon);
+	$lastItem = this.$items.eq(this.$items.length - 1);
+	$firstItem = this.$items.eq(0);
 
-class Slider extends VeamsComponent {
+	// Transition
+	transition = this.$ribbon.css('transition');
+
+	// Pagination
+	paginationDisabled = this.options.disablePagination || this.$items.length < 2;
+	paginationItemSel = '[data-js-item="' + this.options.paginationItemJsItem + '"]';
+	infinite = this.options.infinite && this.$items.length > 1;
+	touchSwipeEnabled = false;
+	clickHandler = true;
+	_index = this.options.startAtIndex || 0;
+	_autoPlay = this.options.autoPlay && this.infinite;
+
 	/**
 	 * Constructor for our class
 	 *
@@ -29,8 +53,8 @@ class Slider extends VeamsComponent {
 		let options = {
 			activeClass: 'is-active', // Active class for slides and pagination items
 			actions: '[data-js-item="slider-actions"]', // Previous Button
-			autoPlay: false, // Enable autoplay
-			autoPlayInterval: 3000, // Autoplay intervall in milliseconds
+			autoPlay: false, // Enable AutoPlay
+			autoPlayInterval: 3000, // AutoPlay interval in milliseconds
 			cloneClass: 'is-cloned', // Clone class for cloned items (only used with infinite)
 			disablePagination: false, // Disable pagination display
 			enableTouchSwipe: true, // Enable/Disable swipe support
@@ -50,12 +74,14 @@ class Slider extends VeamsComponent {
 			startAtIndex: 0, // Start at a different index
 			unresolvedClass: 'is-unresolved', // Unresolved class which gets removed when initialized
 			visibleItems: { // Visible items per viewport
-				'desktop': 1,
-				'tablet-large': 1,
-				'tablet-small': 1,
-				'mobile-large': 1,
-				'mobile-medium': 1,
-				'mobile-small': 1
+				'mobile-s': 1,
+				'mobile-m': 1,
+				'mobile-l': 1,
+				'tablet-s': 1,
+				'tablet-l': 1,
+				'desktop-s': 1,
+				'desktop-m': 1,
+				'desktop-l': 1
 			},
 			wrapper: '[data-js-item="slider-wrapper"]' // Wrapper element
 		};
@@ -72,7 +98,7 @@ class Slider extends VeamsComponent {
 	 */
 	static get info() {
 		return {
-			version: '3.0.3',
+			version: '1.0.0',
 			vc: true,
 			mod: false
 		};
@@ -147,7 +173,7 @@ class Slider extends VeamsComponent {
 	 * Get controls height.
 	 */
 	get controlHeight() {
-		return Helpers.getOuterHeight(this.$prev);
+		return this.$prev.outerHeight();
 	}
 
 	/**
@@ -188,17 +214,17 @@ class Slider extends VeamsComponent {
 	 */
 	get subscribe() {
 		return {
-			'{{Veams.EVENTS.resize}}': 'render'
+			'{{this.context.EVENTS.resize}}': 'render'
 		};
 	}
-	
+
 	/**
 	 * Bind all events
 	 */
 	bindEvents() {
 		if (this.autoPlay && this.options.pauseOnHover) {
-			this.registerEvent('{{Veams.EVENTS.mouseenter}}', 'pause');
-			this.registerEvent('{{Veams.EVENTS.mouseleave}}', 'play');
+			this.registerEvent('{{this.context.EVENTS.mouseenter}}', 'pause');
+			this.registerEvent('{{this.context.EVENTS.mouseleave}}', 'play');
 		}
 	}
 
@@ -207,39 +233,16 @@ class Slider extends VeamsComponent {
 	 */
 	unbindEvents() {
 		// Global Events
-		Veams.Vent.off(Veams.EVENTS.resize);
+		this.context.Vent.off(this.context.EVENTS.resize);
 
 		// Local Events
-		this.$el.off(Veams.clickHandler);
+		this.$el.off(this.context.clickHandler);
 	}
 
 	/** =================================================
 	 * STANDARD METHODS
 	 * ================================================= */
-
-	/**
-	 * Initialize the view
-	 */
-	initialize() {
-		this.index = 0;
-		this.$prev = this.$el.find(this.options.prev);
-		this.$next = this.$el.find(this.options.next);
-		this.$items = this.$el.find(this.options.items);
-		this.$initialItems = this.$items;
-		this.$wrapper = this.$el.find(this.options.wrapper);
-		this.$ribbon = this.$el.find(this.options.ribbon);
-		this.startAtIndex = ~~this.options.startAtIndex;
-		this.$lastItem = this.$items.eq(this.$items.length - 1);
-		this.$firstItem = this.$items.eq(0);
-		this.transition = this.$ribbon.css('transition');
-		this.paginationDisabled = this.options.disablePagination || this.$items.length < 2;
-		this.infinite = this.options.infinite && this.$items.length > 1;
-		this.touchSwipeEnabled = false;
-		this.clickHandler = true;
-		this.autoPlay = this.options.autoPlay && this.infinite;
-		this.paginationItemSel = '[data-js-item="' + this.options.paginationItemJsItem + '"]';
-
-
+	didMount() {
 		if (!this.paginationDisabled) {
 			this.$paginationList = this.$el.find(this.options.paginationList);
 		}
@@ -252,7 +255,7 @@ class Slider extends VeamsComponent {
 
 			for (let item in this.options.visibleItems) {
 				if (this.options.visibleItems.hasOwnProperty(item)) {
-					if (this.options.visibleItems[item] > 1) {
+					if (this.options.visibleItems[ item ] > 1) {
 						console.warn(
 							'Slider: Sorry - option "visibleItems" has no effect while option "infinite" is set to true!');
 						break;
@@ -266,8 +269,8 @@ class Slider extends VeamsComponent {
 	 * Renders the view's template to the UI
 	 */
 	render() {
-		if (!Veams.currentMedia) {
-			console.warn('Slider: Veams.currentMedia is necessary to support the slider module!');
+		if (!this.context.currentMedia) {
+			console.warn('Slider: this.context.currentMedia is necessary to support the slider module!');
 			return;
 		}
 
@@ -277,7 +280,7 @@ class Slider extends VeamsComponent {
 			this.$items = this.$initialItems;
 		}
 
-		this.visibles = this.infinite ? 1 : this.options.visibleItems[Veams.currentMedia];
+		this.visibles = this.infinite ? 1 : this.options.visibleItems[ this.context.currentMedia ];
 		this.itemsLength = this.$items.length;
 
 		this.handleVisibility();
@@ -289,31 +292,27 @@ class Slider extends VeamsComponent {
 
 		if (this.infinite) {
 			this.infiniteLoop();
+			this.index = this.index === 0 ? this.index + this.visibles : this.index;
 		}
 
 		this.bindTransitions();
 		this.getAndSetDimensions();
 
-		if (Veams.detections.touch && this.options.enableTouchSwipe && !this.touchSwipeEnabled) {
+		if (this.context.detections.touch && this.options.enableTouchSwipe && !this.touchSwipeEnabled) {
 			this.bindSwipes();
 		}
 
-		if (this.infinite) {
-			this.goToItem(this.startAtIndex + this.visibles);
-		}
-		else {
-			this.goToItem(this.startAtIndex);
-		}
+		this.goToItem(this.index);
 
 		if (this.autoPlay && this.paused) {
 			this.play();
 		}
 	}
-	
+
 	/** =================================================
 	 * CUSTOM SLIDER METHODS
 	 * ================================================= */
-	
+
 	/**
 	 * Bind transition events
 	 *
@@ -483,7 +482,7 @@ class Slider extends VeamsComponent {
 	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
 	navigateToElement(e, currentTarget) {
-		let $currentTarget = currentTarget ? $(currentTarget) : $(e.currentTarget);
+		let $currentTarget = $(currentTarget);
 
 		if ($currentTarget.hasClass(this.options.activeClass)) {
 			return;
@@ -505,7 +504,7 @@ class Slider extends VeamsComponent {
 	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
 	showNextElement(e, currentTarget) {
-		let $currentTarget = currentTarget ? $(currentTarget) : $(e.currentTarget);
+		const $currentTarget = $(currentTarget);
 
 		if (e && typeof e.preventDefault === 'function') {
 			e.preventDefault();
@@ -528,7 +527,7 @@ class Slider extends VeamsComponent {
 	 * @param {object} currentTarget - Target to which listener was attached.
 	 */
 	showPrevElement(e, currentTarget) {
-		let $currentTarget = currentTarget ? $(currentTarget) : $(e.currentTarget);
+		const $currentTarget = $(currentTarget);
 
 		if (e && typeof e.preventDefault === 'function') {
 			e.preventDefault();
@@ -550,7 +549,7 @@ class Slider extends VeamsComponent {
 	 * @param {number} index - Index of the pagination element.
 	 */
 	getDirection(index) {
-		return index > this.index ? "next" : "prev";
+		return index > this.index ? 'next' : 'prev';
 	}
 
 	/**
@@ -559,9 +558,9 @@ class Slider extends VeamsComponent {
 	bindSwipes() {
 
 		if (this.$items.length > this.visibles) {
-			Helpers.detectSwipe(this.el, 75);
+			detectSwipe(this.el, 75);
 
-			this.$el.on(Veams.EVENTS.swipe, (e) => {
+			this.$el.on(this.context.EVENTS.swipe, (e) => {
 				let direction = e.detail.direction;
 
 				if (direction === 'left') {
@@ -750,7 +749,7 @@ class Slider extends VeamsComponent {
 	 * Reset width styles
 	 */
 	resetStyles() {
-		this.$wrapper[0].removeAttribute('style');
+		this.$wrapper[ 0 ].removeAttribute('style');
 		this.$items.removeAttr('style');
 		this.$ribbon.removeAttr('style');
 	}

@@ -1,5 +1,5 @@
 <p align='right'>
-    <a href='https://badge.fury.io/bo/veams-component-slider'><img src='https://badge.fury.io/bo/veams-component-slider.svg' alt='Bower version' height='20'></a>
+    <a href="https://badge.fury.io/js/@veams/component-slider"><img src="https://badge.fury.io/js/@veams/component-slider.svg" alt="npm version" height="18"></a>
     <a href='https://gitter.im/Sebastian-Fitzner/Veams?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge'><img src='https://badges.gitter.im/Sebastian-Fitzner/Veams.svg' alt='Gitter Chat' /></a>
 </p>
 
@@ -14,7 +14,10 @@ The component represents a simple but powerful slider.
 ----------
 
 ## Requirements
-- `Veams >= v5.0.0` - Veams Framework.
+- [@veams/core](https://github.com/Veams/core) - Veams Core Framework.
+- [@veams/query](https://github.com/Veams/query) or `jquery` - Veams Query or jQuery.
+- [@veams/component](https://github.com/Veams/component) - Veams Component.
+- [@veams/helpers](https://github.com/Veams/helpers) - Veams Detection Helpers.
 
 -----------
 
@@ -22,45 +25,55 @@ The component represents a simple but powerful slider.
 
 ### Installation with Veams
 
-`veams install vc slider`
-
-### Installation with Bower
-
-`bower install veams-component-slider --save`
+``` bash
+veams install component slider
+```
+``` bash
+veams -i c slider
+```
 
 ----------- 
 
 ## Fields
 
-### `c-slider.hbs`
+### `slider.hbs`
 
-The partial is a `wrapWith` partial.
+The partial is a `{{#wrapWith}}` helper. Documentation for [wrapWith](https://github.com/Sebastian-Fitzner/mangony-hbs-helper-wrap-with) helper.
 
 #### Settings
-- settings.sliderContextClass {`String`} [default] - _Context class of component._
-- settings.sliderClasses {`String`} - _Modifier classes for component._
-- settings.sliderJsOptions {`Object`} - _JavaScript options which gets stringified._
-- settings.sliderInnerFullWidth {`Boolean`} [false] - _Delete the class `.is-container` from `.slider__content`._
-- settings.sliderHidePagination {`Boolean`} [false] - _Hide the pagination when set to true._
 
-### `c-slider__controls.hbs`
+| Parameter | Type | Value | Description |
+|:--- |:---:|:---: |:--- |
+| settings.sliderContextClass | String | `default` | Context class of component. |
+| settings.sliderClasses | String | | Modifier classes for component. |
+| settings.sliderJsOptions | Object | | JavaScript options which gets stringified. |
+| settings.sliderInnerFullWidth | Boolean | `false` | Delete the class `.is-container` from `.slider__content`. |
+| settings.sliderHidePagination | Boolean | `false` | Hide the pagination when set to true. |
+
+### `slider__controls.hbs`
 
 #### Content
-- content.sliderButtons {`Object`} - _Contains the controls content. When the object is not defined, the controls will not be printed out._
-- content.sliderButtons.prev {`String`} - _Define the button text for the previous button._
-- content.sliderButtons.next {`String`} - _Define the button text for the next button._
 
-### `c-slider__list.hbs`
+| Parameter | Type | Description |
+|:--- |:---:|:--- |
+| content.sliderButtons | Object | Contains the controls content. When the object is not defined, the controls will not be printed out. |
+| content.sliderButtons.prev | String | Define the button text for the previous button. |
+| content.sliderButtons.next | String | Define the button text for the next button. |
 
-The partial is a `wrapWith` partial.
+### `slider__list.hbs`
+
+The partial is a `{{#wrapWith}}` helper. Documentation for [wrapWith](https://github.com/Sebastian-Fitzner/mangony-hbs-helper-wrap-with) helper.
 
 #### Settings
-- settings.sliderOverflow {`Boolean`} - _Set this option to `true` if you want to add the class `.is-overflow` which gives you the possibility to show all hidden items next to the active element(s)._
+
+| Parameter | Type | Description |
+|:--- |:---:|:--- |
+| settings.sliderOverflow | Boolean | Set this option to `true` if you want to add the class `.is-overflow` which gives you the possibility to show all hidden items next to the active element(s). |
 
 
-### `c-slider__item.hbs`
+### `slider__item.hbs`
 
-The partial is a `wrapWith` partial.
+The partial is a `{{#wrapWith}}` helper. Documentation for [wrapWith](https://github.com/Sebastian-Fitzner/mangony-hbs-helper-wrap-with) helper.
 
 -------------
 
@@ -68,42 +81,47 @@ The partial is a `wrapWith` partial.
 
 The module gives you the possibility to override default options: 
 
-- activeClass {`String`} ['is-active'] - _Class for the active slide._
-- actions {`String`} ['[data-js-item="slider-actions"]'] - _Actions wrapper element in the component._
-- autoPlay {`Boolean`} [false] - _Enable autoplay option of the slider._
-- autoPlayInterval {`Number`} [3000] - _Autoplay speed in milliseconds._
-- cloneClass {`String`} ['is-cloned'] - _For the infinite slider the last and first element get cloned. The cloning class can be overriden._
-- disablePagination {`Boolean`} [false] - _Disable pagination._
-- enableTouchSwipe {`Boolean`} [true] - _Enable support for swipe gestures on touch devices._
-- groupPaginationItems {`Boolean`} [true] - _Enable the grouping of pagination items._
-- hiddenClass {`String`} ['is-hidden'] - _The hidden class used by handling the visibility of the slider._
-- infinite {`Boolean`} ['is-closed'] - _The slider will be set in infinite mode. Can not be used with multiple active slide items._
-- items {`String`} ['[data-js-item="slider-item"]'] - _Define the slide item element._
-- next {`String`} ['[data-js-item="slider-next"]'] - _Define the next button element._
-- prev {`String`} ['[data-js-item="slider-prev"]'] - _Define the prev button element._
-- pagination {`String`} ['[data-js-item="slider-pagination"]'] - _Define the pagination element in which the pagination items are generated in._
-- paginationItemClass {`String`} ['slider__pagination-list-item'] - _Class for the generated pagination item._
-- paginationItemJsAtom {`String`} ['slider-pagination-item'] - _Data attribute for the generated pagination item._
-- paginationList {`String`} ['[data-js-item="slider-pagination-list"]'] - _Define the pagination list element in which the pagination items are generated in._
-- ribbon {`String`} ['[data-js-item="slider-ribbon"]'] - _Define the slider ribbon which is holding all slides and gets the full width._
-- pauseOnHover {`Boolean`} [true] - _When `autoplay` is set you can enable/disable pause on hover._
-- slideByItemNumber {`Number`} [false] - _You can use the option to override the initial slide step which is the number of current visible items._
-- startAtIndex {`Number`} [0] - _Start index for the slider._
-- openIndex {`Number`} [null] - _Index of panel to be opened on init (zero based)._
-- visibleItems {`Object`} [ {'desktop': 1, 'tablet-large': 1, 'tablet-small': 1, 'mobile-large': 1, 'mobile-medium': 1, 'mobile-small': 1} ] - _Define how many slide items should be visible on different viewports._
-- wrapper {`String`} ['[data-js-item="slider-wrapper"]'] - _Define the slider wrapper element._
+| Option | Type | Default | Description |
+|:--- |:---:|:---:|:--- |
+| activeClass | String | `'is-active'` | Class for the active slide. |
+| actions | String | `'[data-js-item="slider-actions"]'` | Actions wrapper element in the component. |
+| autoPlay | Boolean | `false` | Enable AutoPlay option of the slider. |
+| autoPlayInterval | Number | `3000` | AutoPlay speed in milliseconds. |
+| cloneClass | String | `'is-cloned'` | For the infinite slider the last and first element gets cloned. The cloning class can be overriden. |
+| disablePagination | Boolean | `false` | Disable pagination. |
+| enableTouchSwipe | Boolean | `true` | Enable support for swipe gestures on touch devices. |
+| groupPaginationItems | Boolean | `true` | Enable the grouping of pagination items. |
+| hiddenClass | String | `'is-hidden'` | The hidden class used by handling the visibility of the slider. |
+| infinite | Boolean | `'is-closed'` | The slider will be set in infinite mode. Can not be used with multiple active slide items. |
+| items | String | `'[data-js-item="slider-item"]'` | Define the slide item element. |
+| next | String | `'[data-js-item="slider-next"]'` | Define the next button element. |
+| prev | String | `'[data-js-item="slider-prev"]'` | Define the prev button element. |
+| pagination | String | `'[data-js-item="slider-pagination"]'` | Define the pagination element in which the pagination items are generated in. |
+| paginationItemClass | String | `'slider__pagination-list-item'` | Class for the generated pagination item. |
+| paginationItemJsAtom | String | `'slider-pagination-item'` | Data attribute for the generated pagination item. |
+| paginationList | String | `'[data-js-item="slider-pagination-list"]'` | Define the pagination list element in which the pagination items are generated in. |
+| ribbon | String | `'[data-js-item="slider-ribbon"]'` | Define the slider ribbon which is holding all slides and gets the full width. |
+| pauseOnHover | Boolean | `true` | When `autoplay` is set you can enable/disable pause on hover. |
+| slideByItemNumber | Number | `false` | You can use the option to override the initial slide step which is the number of current visible items. |
+| startAtIndex | Number | `0` | Start index for the slider. |
+| openIndex | Number | `null` | Index of panel to be opened on init (zero based). |
+| visibleItems | Object | `{'desktop-l': 1, 'desktop-m': 1, 'desktop-s': 1, 'tablet-l': 1, 'tablet-s': 1, 'mobile-l': 1, 'mobile-m': 1, 'mobile-s': 1}` | Define how many slide items should be visible on different viewports. |
+| wrapper | String | `'[data-js-item="slider-wrapper"]'` | Define the slider wrapper element. |
 
 ------------
 
 ## Sass Options
 
 There are multiple global variables which you can change: 
-- $slider-darken [`10 !default`] - _Darken value for hover effects._
-- $slider-unresolved-height [`300px !default`] - _Set a fix height when the slider is in unresolved state._
-- $slider-duration [`600ms !default`] - _Slide item animation duration._
-- $slider-ease-method [`ease !default`] - _Slide item animation ease method._
-- $slider-control-bg-color [`#a5cfd1 !default`] - _Background color of control buttons._
-- $slider-pagination-color `[#555 !default`] - _Background color of pagination items._
-- $slider-pagination-color-active `[$slider-pagination-color !default`] - _Active vackground color of pagination items which gets darken by `$slider-darken`._
-- $slider-pagination-size [`15px !default`] - _Pagination size (width & height)._
-- $slider-pagination-border-radius [`25% !default`] - _Border radius of pagination items._
+
+| Variable | Value | Description |
+|:--- | :---: |:--- |
+| $slider-darken: | `10 !default` | Darken value for hover effects. |
+| $slider-unresolved-height: | `300px !default` | Set a fix height when the slider is in unresolved state. |
+| $slider-duration: | ` 600ms !default` | Slide item animation duration. |
+| $slider-ease-method: | `ease !default` | Slide item animation ease method. |
+| $slider-control-bg-color: | `#a5cfd1 !default` | Background color of control buttons. |
+| $slider-pagination-color: | `#555 !default` | Background color of pagination items. |
+| $slider-pagination-color-active: | `$slider-pagination-color !default` | Active vackground color of pagination items which gets darken by `$slider-darken`. |
+| $slider-pagination-size: | `15px !default` | Pagination size (width & height). |
+| $slider-pagination-border-radius: | `25% !default` | Border radius of pagination items. |

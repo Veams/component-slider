@@ -1,15 +1,16 @@
+## Usage
 
 ### Include: Page
 
 ``` hbs
 {{! @INSERT :: START @id: slider, @tag: component-partial }}
-{{#with slider-bp.variations.simple}}
+{{#with slider.variations.simple}}
     {{! wrapWith START: Slider }}
-    {{#wrapWith "c-slider" settings=this.settings content=this.content}}
+    {{#wrapWith "slider" settings=this.settings content=this.content}}
         {{! WrapWith START: Slider List }}
-        {{#wrapWith "c-slider__list"}}
+        {{#wrapWith "slider__list"}}
             {{#times 8}}
-                {{#wrapWith "c-slider__item"}}
+                {{#wrapWith "slider__item"}}
                     <img src="https://placehold.it/1920x800" alt="test">
                 {{/wrapWith}}
             {{/times}}
@@ -21,44 +22,19 @@
 {{! @INSERT :: END }}
 ```
 
-### Include: SCSS
-
-``` scss
-// @INSERT :: START @tag: scss-import //
-@import "components/_c-slider";
-// @INSERT :: END //
-// @INSERT :: START @tag: scss-self-contained-import //
-@import "../templating/partials/components/slider/scss/_c-slider";
-// @INSERT :: END //
-```
-
 ### Include: JavaScript
 
-#### Import
-``` js
-// @INSERT :: START @tag: js-import //
-import Slider from './modules/slider/slider';
-// @INSERT :: END //
-// @INSERT :: START @tag: js-self-contained-import //
-import Slider from '../templating/partials/components/slider/js/slider';
-// @INSERT :: END //
-```
+#### Initializing with `@veams/modules`
 
-#### Initializing in Veams V5
 ``` js
-// @INSERT :: START @tag: js-init-v5 //
-    ,
-    /**
-     * Init Slider
-     */
-    {
-        namespace: 'slider',
-        module: Slider
-    }
+// @INSERT :: START @tag: js-init-modules-@1 //
+// Init Slider
+Veams.modules.add({ namespace: 'slider', module: Slider });
 // @INSERT :: END //
 ```
 
 #### Custom Events
+
 ``` js
 // @INSERT :: START @tag: js-events //
 /**
