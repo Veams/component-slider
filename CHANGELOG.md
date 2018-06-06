@@ -1,5 +1,8 @@
 ## Namespaced Versions
 
+### v1.0.2
+- Update README to escape handlebars syntax.
+
 ### v1.0.0
 
 - Migrate to use 
