@@ -83,30 +83,33 @@ The module gives you the possibility to override default options:
 
 | Option | Type | Default | Description |
 |:--- |:---:|:---:|:--- |
-| activeClass | String | `'is-active'` | Class for the active slide. |
-| actions | String | `'[data-js-item="slider-actions"]'` | Actions wrapper element in the component. |
-| autoPlay | Boolean | `false` | Enable AutoPlay option of the slider. |
-| autoPlayInterval | Number | `3000` | AutoPlay speed in milliseconds. |
-| cloneClass | String | `'is-cloned'` | For the infinite slider the last and first element gets cloned. The cloning class can be overriden. |
-| disablePagination | Boolean | `false` | Disable pagination. |
-| enableTouchSwipe | Boolean | `true` | Enable support for swipe gestures on touch devices. |
-| groupPaginationItems | Boolean | `true` | Enable the grouping of pagination items. |
-| hiddenClass | String | `'is-hidden'` | The hidden class used by handling the visibility of the slider. |
-| infinite | Boolean | `'is-closed'` | The slider will be set in infinite mode. Can not be used with multiple active slide items. |
-| items | String | `'[data-js-item="slider-item"]'` | Define the slide item element. |
-| next | String | `'[data-js-item="slider-next"]'` | Define the next button element. |
-| prev | String | `'[data-js-item="slider-prev"]'` | Define the prev button element. |
-| pagination | String | `'[data-js-item="slider-pagination"]'` | Define the pagination element in which the pagination items are generated in. |
-| paginationItemClass | String | `'slider__pagination-list-item'` | Class for the generated pagination item. |
-| paginationItemJsAtom | String | `'slider-pagination-item'` | Data attribute for the generated pagination item. |
-| paginationList | String | `'[data-js-item="slider-pagination-list"]'` | Define the pagination list element in which the pagination items are generated in. |
-| ribbon | String | `'[data-js-item="slider-ribbon"]'` | Define the slider ribbon which is holding all slides and gets the full width. |
-| pauseOnHover | Boolean | `true` | When `autoplay` is set you can enable/disable pause on hover. |
-| slideByItemNumber | Number | `false` | You can use the option to override the initial slide step which is the number of current visible items. |
-| startAtIndex | Number | `0` | Start index for the slider. |
-| openIndex | Number | `null` | Index of panel to be opened on init (zero based). |
-| visibleItems | Object | `{'desktop-l': 1, 'desktop-m': 1, 'desktop-s': 1, 'tablet-l': 1, 'tablet-s': 1, 'mobile-l': 1, 'mobile-m': 1, 'mobile-s': 1}` | Define how many slide items should be visible on different viewports. |
-| wrapper | String | `'[data-js-item="slider-wrapper"]'` | Define the slider wrapper element. |
+| autoPlay | Boolean | `false` | Enable AutoPlay option of the slider |
+| autoPlayInterval | Number | `3000` | AutoPlay speed in milliseconds |
+| classes.active | String | `'is-active'` | Class for the active slide |
+| classes.cloneClass | String | `'is-cloned'` | For the infinite slider the last and first element gets cloned. The cloning class can be overridden |
+| classes.disabled | String | `'is-disabled'` | Class for disabled next/prev button |
+| classes.hidden | String | `'is-hidden'` | The hidden class used by handling the visibility of the slider |
+| classes.paginationItem | String | `'slider__pagination-list-item'` | Class which used in mini template |
+| classes.sliding | String | `is-sliding` | Class to be set during slide animation |
+| classes.unresolved | String | `is-unresolved` | Unresolved class which gets removed when initialized |
+| disablePagination | Boolean | `false` | Disable pagination |
+| enableTouchSwipe | Boolean | `true` | Enable support for swipe gestures on touch devices |
+| groupPaginationItems | Boolean | `true` | Enable the grouping of pagination items |
+| infinite | Boolean | `false` | The slider will be set in infinite mode. Can not be used with multiple active slide items |
+| pageScrollThreshold | Number | `30` | Threshold for vertical swipe in pixels |
+| paginationItemClass | String | `'slider__pagination-list-item'` | Class for the generated pagination item |
+| paginationItemJsAtom | String | `'slider-pagination-item'` | Data attribute for the generated pagination item |
+| pauseOnHover | Boolean | `true` | When `autoplay` is set you can enable/disable pause on hover |
+| selectors.items | String | `'[data-js-item="slider-item"]'` | Define the slide item element |
+| selectors.next | String | `'[data-js-item="slider-next"]'` | Define the next button element |
+| selectors.prev | String | `'[data-js-item="slider-prev"]'` | Define the prev button element |
+| selectors.paginationList | String | `'[data-js-item="slider-pagination-list"]'` | Define the pagination list element in which the pagination items are generated in |
+| selectors.ribbon | String | `'[data-js-item="slider-ribbon"]'` | Define the slider ribbon which is holding all slides and gets the full width |
+| selectors.wrapper | String | `'[data-js-item="slider-wrapper"]'` | Define the slider wrapper element |
+| slideByItemNumber | Number | `false` | You can use the option to override the initial slide step which is the number of current visible items |
+| startAtIndex | Number | `0` | Start index for the slider |
+| swipeThreshold | Number | `5` | Threshold for horizontal swipe in percent |
+| visibleItems | Object | `{'mobile-s': 1, 'mobile-p': 1, 'tablet-p': 1, 'tablet-l': 1, 'desktop-m': 1, 'desktop-l': 1}` | Define how many slide items should be visible on different viewports |
 
 ------------
 
