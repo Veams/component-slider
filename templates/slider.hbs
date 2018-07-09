@@ -1,14 +1,9 @@
-<div class="c-slider{{#if options.settings.sliderContextClass}}--{{options.settings.sliderContextClass}}{{else}}--default{{/if}}{{#if options.settings.sliderClasses}} {{options.settings.sliderClasses}}{{/if}}"
+<div class="c-slider{{#if
+		options.settings.sliderContextClass}}--{{options.settings.sliderContextClass}}{{else}}--default{{/if}}{{#if
+		options.settings.sliderClasses}} {{options.settings.sliderClasses}}{{/if}}"
      data-css="c-slider"
      data-js-module="slider"{{#if options.settings.sliderJsOptions}}
      data-js-options='{{stringify options.settings.sliderJsOptions}}'{{/if}}>
-
-	{{#with options.content.sliderButtons}}
-		<div class="slider__controls-wrapper" data-js-item="slider-actions">
-			{{> slider__controls }}
-		</div>
-	{{/with}}
-
 	<div class="slider__content{{#unless options.settings.sliderInnerFullWidth}} is-container{{/unless}}">
 		{{{yield}}}
 	</div>
@@ -18,4 +13,10 @@
 			{{> slider__pagination }}
 		</div>
 	{{/unless}}
+
+	{{#with options.content.sliderButtons}}
+		<div class="slider__controls-wrapper" aria-hidden="true">
+			{{> slider__controls }}
+		</div>
+	{{/with}}
 </div>

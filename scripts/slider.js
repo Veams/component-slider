@@ -2,7 +2,7 @@
  * Represents a responsive slider which can be used as ribbon.
  *
  * @module Slider
- * @version v1.0.0
+ * @version v1.1.0
  *
  * @author Sebastian Fitzner
  * @author Andy Gutsche
@@ -10,7 +10,7 @@
 import $ from '@veams/query';
 import Component from '@veams/component';
 import transitionEndEvent from '@veams/helpers/lib/detection/transition-end-event';
-import detectSwipe from '@veams/helpers/lib/detection/detect-swipe';
+import getComputedTranslate from '@veams/helpers/lib/browser/get-computed-translate';
 
 class Slider extends Component {
 	/**
@@ -19,12 +19,12 @@ class Slider extends Component {
 
 	// Elements in Markup
 	$el = $(this.el);
-	$prev = this.$el.find(this.options.prev);
-	$next = this.$el.find(this.options.next);
-	$items = this.$el.find(this.options.items);
+	$prev = this.$el.find(this.options.selectors.prev);
+	$next = this.$el.find(this.options.selectors.next);
+	$items = this.$el.find(this.options.selectors.items);
 	$initialItems = this.$items;
-	$wrapper = this.$el.find(this.options.wrapper);
-	$ribbon = this.$el.find(this.options.ribbon);
+	$wrapper = this.$el.find(this.options.selectors.wrapper);
+	$ribbon = this.$el.find(this.options.selectors.ribbon);
 	$lastItem = this.$items.eq(this.$items.length - 1);
 	$firstItem = this.$items.eq(0);
 
@@ -51,39 +51,47 @@ class Slider extends Component {
 	 */
 	constructor(obj) {
 		let options = {
-			activeClass: 'is-active', // Active class for slides and pagination items
-			actions: '[data-js-item="slider-actions"]', // Previous Button
+			classes: {
+				active: 'is-active', // Active class for slides and pagination items
+				cloned: 'is-cloned', // Clone class for cloned items (only used with infinite)
+				disabled: 'is-disabled', // Disabled class for next/prev button
+				hidden: 'is-hidden', // hidden class for pagination
+				paginationItem: 'slider__pagination-list-item', // Define your class which we use in our mini tmpl
+				sliding: 'is-sliding', // Class to be set during slide animation
+				unresolved: 'is-unresolved' // Unresolved class which gets removed when initialized
+			},
 			autoPlay: false, // Enable AutoPlay
 			autoPlayInterval: 3000, // AutoPlay interval in milliseconds
-			cloneClass: 'is-cloned', // Clone class for cloned items (only used with infinite)
 			disablePagination: false, // Disable pagination display
 			enableTouchSwipe: true, // Enable/Disable swipe support
 			groupPaginationItems: false, // Group the pagination elements (useful for multiple visible items)
-			hiddenClass: 'is-hidden', // hidden class for pagination
 			infinite: false, // Infinite looping (only possible without multiple visible items)
-			items: '[data-js-item="slider-item"]', // Slide Items
-			next: '[data-js-item="slider-next"]', // Next Button
-			prev: '[data-js-item="slider-prev"]', // Previous Button
-			pagination: '[data-js-item="slider-pagination"]', // Pagination
-			paginationItemClass: 'slider__pagination-list-item', // Define your class which we use in our mini tmpl
+			pageScrollThreshold: 30, // Threshold for vertical swipe in pixels
 			paginationItemJsItem: 'slider-pagination-item', // data-js-item for pagination list item
-			paginationList: '[data-js-item="slider-pagination-list"]', // Pagination List
-			ribbon: '[data-js-item="slider-ribbon"]', // Ribbon element
 			pauseOnHover: true, // Used when options.autoPlay is true
+			selectors: {
+				items: '[data-js-item="slider-item"]', // Slide Items
+				next: '[data-js-item="slider-next"]', // Next Button
+				prev: '[data-js-item="slider-prev"]', // Previous Button
+				paginationList: '[data-js-item="slider-pagination-list"]', // Pagination List
+				ribbon: '[data-js-item="slider-ribbon"]', // Ribbon element
+				wrapper: '[data-js-item="slider-wrapper"]' // Wrapper element
+			},
 			slideByItemNumber: false, // Use the option to override the initial slide step
 			startAtIndex: 0, // Start at a different index
-			unresolvedClass: 'is-unresolved', // Unresolved class which gets removed when initialized
-			visibleItems: { // Visible items per viewport
+			swipeThreshold: 5, // Threshold for horizontal swipe in percent
+			visibleItems: {
+				// Visible items per viewport
 				'mobile-s': 1,
-				'mobile-m': 1,
+				'mobile-p': 1,
 				'mobile-l': 1,
-				'tablet-s': 1,
+				'mobile-xl': 1,
+				'tablet-p': 1,
 				'tablet-l': 1,
-				'desktop-s': 1,
 				'desktop-m': 1,
-				'desktop-l': 1
-			},
-			wrapper: '[data-js-item="slider-wrapper"]' // Wrapper element
+				'desktop-l': 1,
+				'desktop-xl': 1
+			}
 		};
 
 		super(obj, options);
@@ -188,7 +196,7 @@ class Slider extends Component {
 	 * Get ribbon width.
 	 */
 	get ribbonWidth() {
-		return this.$items.length * (this.thumbWidth);
+		return this.$items.length * this.thumbWidth;
 	}
 
 	/** =================================================
@@ -200,10 +208,10 @@ class Slider extends Component {
 	 */
 	get events() {
 		return {
-			'click {{this.options.prev}}': 'showPrevElement',
-			'touchstart {{this.options.prev}}': 'showPrevElement',
-			'click {{this.options.next}}': 'showNextElement',
-			'touchstart {{this.options.next}}': 'showNextElement',
+			'click {{this.options.selectors.prev}}': 'showPrevElement',
+			'touchstart {{this.options.selectors.prev}}': 'showPrevElement',
+			'click {{this.options.selectors.next}}': 'showNextElement',
+			'touchstart {{this.options.selectors.next}}': 'showNextElement',
 			'click {{this.paginationItemSel}}': 'navigateToElement',
 			'touchstart {{this.paginationItemSel}}': 'navigateToElement'
 		};
@@ -214,7 +222,7 @@ class Slider extends Component {
 	 */
 	get subscribe() {
 		return {
-			'{{this.context.EVENTS.resize}}': 'render'
+			'{{context.EVENTS.resize}}': 'render'
 		};
 	}
 
@@ -223,8 +231,8 @@ class Slider extends Component {
 	 */
 	bindEvents() {
 		if (this.autoPlay && this.options.pauseOnHover) {
-			this.registerEvent('{{this.context.EVENTS.mouseenter}}', 'pause');
-			this.registerEvent('{{this.context.EVENTS.mouseleave}}', 'play');
+			this.registerEvent('{{context.EVENTS.mouseenter}}', 'pause');
+			this.registerEvent('{{context.EVENTS.mouseleave}}', 'play');
 		}
 	}
 
@@ -244,20 +252,23 @@ class Slider extends Component {
 	 * ================================================= */
 	didMount() {
 		if (!this.paginationDisabled) {
-			this.$paginationList = this.$el.find(this.options.paginationList);
+			this.$paginationList = this.$el.find(this.options.selectors.paginationList);
 		}
 
 		if (this.options.autoPlay && !this.infinite) {
-			console.warn('Slider: Sorry - option "autoPlay" has no effect while option "infinite" is set to false!');
+			console.warn(
+				'Slider: Sorry - option "autoPlay" has no effect while option "infinite" is set to false!'
+			);
 		}
 
 		if (this.infinite) {
 
 			for (let item in this.options.visibleItems) {
 				if (this.options.visibleItems.hasOwnProperty(item)) {
-					if (this.options.visibleItems[ item ] > 1) {
+					if (this.options.visibleItems[item] > 1) {
 						console.warn(
-							'Slider: Sorry - option "visibleItems" has no effect while option "infinite" is set to true!');
+							'Slider: Sorry - option "visibleItems" has no effect while option "infinite" is set to true!'
+						);
 						break;
 					}
 				}
@@ -270,7 +281,9 @@ class Slider extends Component {
 	 */
 	render() {
 		if (!this.context.currentMedia) {
-			console.warn('Slider: this.context.currentMedia is necessary to support the slider module!');
+			console.warn(
+				'Slider: this.context.currentMedia is necessary to support the slider module!'
+			);
 			return;
 		}
 
@@ -280,7 +293,7 @@ class Slider extends Component {
 			this.$items = this.$initialItems;
 		}
 
-		this.visibles = this.infinite ? 1 : this.options.visibleItems[ this.context.currentMedia ];
+		this.visibles = this.infinite ? 1 : this.options.visibleItems[this.context.currentMedia];
 		this.itemsLength = this.$items.length;
 
 		this.handleVisibility();
@@ -298,7 +311,11 @@ class Slider extends Component {
 		this.bindTransitions();
 		this.getAndSetDimensions();
 
-		if (this.context.detections.touch && this.options.enableTouchSwipe && !this.touchSwipeEnabled) {
+		if (
+			this.context.detections.touch &&
+			this.options.enableTouchSwipe &&
+			!this.touchSwipeEnabled
+		) {
 			this.bindSwipes();
 		}
 
@@ -333,6 +350,8 @@ class Slider extends Component {
 	onRibbonTransitionEnd(e) {
 		e.stopPropagation();
 
+		this.$el.removeClass(this.options.classes.sliding);
+
 		if (this.autoPlay && this.paused) {
 
 			if (this.options.pauseOnHover) {
@@ -340,14 +359,13 @@ class Slider extends Component {
 				if (!this.$el.is(':hover')) {
 					this.play();
 				}
-			}
-			else {
+			} else {
 				this.play();
 			}
 		}
 
-		if (this.$clonedFirst && this.$clonedFirst.hasClass(this.options.activeClass)) {
-			this.$clonedFirst.removeClass(this.options.activeClass);
+		if (this.$clonedFirst && this.$clonedFirst.hasClass(this.options.classes.active)) {
+			this.$clonedFirst.removeClass(this.options.classes.active);
 			this.index = 1;
 
 			this.animateSlide({
@@ -356,8 +374,8 @@ class Slider extends Component {
 			});
 		}
 
-		if (this.$clonedLast && this.$clonedLast.hasClass(this.options.activeClass)) {
-			this.$clonedLast.removeClass(this.options.activeClass);
+		if (this.$clonedLast && this.$clonedLast.hasClass(this.options.classes.active)) {
+			this.$clonedLast.removeClass(this.options.classes.active);
 			this.index = this.$items.length - this.visibles - 1;
 
 			this.animateSlide({
@@ -368,7 +386,6 @@ class Slider extends Component {
 
 		this.clickHandler = true;
 	}
-
 
 	/**
 	 * React to transitionend on items
@@ -384,8 +401,8 @@ class Slider extends Component {
 	 *
 	 */
 	infiniteLoop() {
-		this.$clonedFirst = this.$firstItem.clone(true).addClass(this.options.cloneClass);
-		this.$clonedLast = this.$lastItem.clone(true).addClass(this.options.cloneClass);
+		this.$clonedFirst = this.$firstItem.clone(true).addClass(this.options.classes.cloned);
+		this.$clonedLast = this.$lastItem.clone(true).addClass(this.options.classes.cloned);
 
 		if (this.options.infinite) {
 			this.$clonedFirst.find(this.paginationItemSel).attr('data-index', this.itemsLength);
@@ -395,7 +412,7 @@ class Slider extends Component {
 		this.$firstItem.before(this.$clonedLast);
 		this.$lastItem.after(this.$clonedFirst);
 
-		this.$items = $(this.options.items, this.$el);
+		this.$items = $(this.options.selectors.items, this.$el);
 	}
 
 	/**
@@ -407,10 +424,14 @@ class Slider extends Component {
 		if (!obj.animate) {
 			this.$ribbon.css('transition', 'none');
 		} else {
+			if (obj.idx !== obj.prevIdx) {
+				this.$el.addClass(this.options.classes.sliding);
+			}
+
 			this.$ribbon.css('transition', this.transition);
 		}
 
-		this.$ribbon.css('left', -obj.idx * (this.thumbWidth) + 'px');
+		this.$ribbon.css('transform', 'translate3d(' + -obj.idx * this.thumbWidth + 'px, 0, 0)');
 	}
 
 	/**
@@ -418,12 +439,11 @@ class Slider extends Component {
 	 *
 	 */
 	checkSlides() {
-
-		if (this.$clonedFirst.hasClass(this.options.activeClass)) {
-			this.$firstItem.addClass(this.options.activeClass);
+		if (this.$clonedFirst.hasClass(this.options.classes.active)) {
+			this.$firstItem.addClass(this.options.classes.active);
 		}
-		if (this.$clonedLast.hasClass(this.options.activeClass)) {
-			this.$lastItem.addClass(this.options.activeClass);
+		if (this.$clonedLast.hasClass(this.options.classes.active)) {
+			this.$lastItem.addClass(this.options.classes.active);
 		}
 	}
 
@@ -432,7 +452,7 @@ class Slider extends Component {
 	 */
 	handleVisibility() {
 		if (this.itemsLength === 0) {
-			this.$el.addClass(this.options.hiddenClass);
+			this.$el.addClass(this.options.classes.hidden);
 			console.warn('Slider: There is no item we can use in our slider :(');
 		}
 
@@ -454,14 +474,14 @@ class Slider extends Component {
 		let tmpl = '';
 		let i = 0;
 		let item = this.options.paginationItemJsItem;
-		let itemClass = this.options.paginationItemClass;
+		let itemClass = this.options.classes.paginationItem;
 
 		for (i; i < this.$items.length; i++) {
 			let idx = i + 1;
 			let hiddenClass = '';
 
 			if (this.options.groupPaginationItems) {
-				hiddenClass = i % this.visibles === 0 ? '' : this.options.hiddenClass;
+				hiddenClass = i % this.visibles === 0 ? '' : this.options.classes.hidden;
 			}
 
 			tmpl += `
@@ -472,7 +492,10 @@ class Slider extends Component {
 		}
 
 		this.$paginationList.append(tmpl);
-		this.$paginationItems = $('[data-js-item="' + this.options.paginationItemJsItem + '"]', this.$el);
+		this.$paginationItems = $(
+			'[data-js-item="' + this.options.paginationItemJsItem + '"]',
+			this.$el
+		);
 	}
 
 	/**
@@ -484,7 +507,7 @@ class Slider extends Component {
 	navigateToElement(e, currentTarget) {
 		let $currentTarget = $(currentTarget);
 
-		if ($currentTarget.hasClass(this.options.activeClass)) {
+		if ($currentTarget.hasClass(this.options.classes.active)) {
 			return;
 		}
 
@@ -556,24 +579,112 @@ class Slider extends Component {
 	 * Bind all swipe gestures.
 	 */
 	bindSwipes() {
+		this.registerEvent(
+			'{{context.EVENTS.touchstart}} {{this.options.selectors.ribbon}}',
+			'startDrag'
+		);
+	}
 
-		if (this.$items.length > this.visibles) {
-			detectSwipe(this.el, 75);
+	/**
+	 * Drag handler for preview controller and map
+	 *
+	 * @param {Object} e - Event object for 'touchstart' events
+	 * @param {Object} e - Event object for 'touchstart' events
+	 */
+	startDrag(e, currentTarget) {
+		let elem = currentTarget;
+		let $elem = $(elem);
+		let deltaX = 0;
+		let deltaY = 0;
 
-			this.$el.on(this.context.EVENTS.swipe, (e) => {
-				let direction = e.detail.direction;
+		// save initial values (including current x and y offset values)
+		let dragStartValues = {
+			elemX: elem.offsetLeft + getComputedTranslate(elem, 'x'),
+			pageX: e.touches[0].pageX,
+			pageY: e.touches[0].pageY
+		};
 
-				if (direction === 'left') {
-					this.goToItem(this.index + this.visibles);
+		// on 'touchmove'
+		$elem.on(this.context.EVENTS.touchmove, e => {
+			// get delta compared to initial values
+			let dragValues = Slider.getDragValues(e, dragStartValues);
+
+			deltaX = dragValues.deltaX;
+			deltaY = dragValues.deltaY;
+
+			if (Math.abs(deltaY) <= this.options.pageScrollThreshold) {
+				this.translateRibbon(dragValues.x);
+			}
+		});
+
+		// if user stops touching stop tracking of touch movement
+		$(window).on(this.context.EVENTS.touchend, () => {
+			$(window).off(this.context.EVENTS.touchend);
+			$elem.off(this.context.EVENTS.touchmove);
+
+			// if drag delta for x < threshold snap back
+			if (
+				Math.abs(deltaX) <= this.$el.outerWidth() * (this.options.swipeThreshold / 100) ||
+				Math.abs(deltaY) > this.options.pageScrollThreshold
+			) {
+				this.goToItem(this.index);
+
+				return;
+			}
+
+			e.preventDefault();
+
+			// swipe right
+			if (deltaX > 0) {
+				// if not first item goto previous otherwise snap back
+				if (this.index > 0) {
+					this.goToItem(this.index - 1);
+				} else {
+					this.goToItem(this.index);
 				}
+			}
 
-				if (direction === 'right') {
-					this.goToItem(this.index - this.visibles);
+			// swipe left
+			if (deltaX < 0) {
+				// if not last item goto next otherwise snap back
+				if (this.index < this.$items.length - 1) {
+					this.goToItem(this.index + 1);
+				} else {
 				}
-			});
+				this.goToItem(this.index);
+			}
+		});
+	}
 
-			this.touchSwipeEnabled = true;
-		}
+	/**
+	 * Calculate and return delta values between initial values and current values
+	 *
+	 * @param {Object} e - Event object for 'touchstart' events
+	 * @param {Object} dragStartValues - Object containing initial values
+	 *
+	 * @return {Object} - Delta values and new x-value
+	 */
+	static getDragValues(e, dragStartValues) {
+		let deltaX = e.touches[0].pageX - dragStartValues.pageX;
+		let deltaY = e.touches[0].pageY - dragStartValues.pageY;
+
+		return {
+			x: dragStartValues.elemX + deltaX,
+			deltaX: deltaX,
+			deltaY: deltaY
+		};
+	}
+
+	/**
+	 * Translate ribbon on swipe
+	 *
+	 * @param {Number} x - New translate value for x-axis
+	 */
+	translateRibbon(x) {
+		this.$ribbon.css({
+			transform: 'translate3d(' + x + 'px, 0, 0)',
+			transition: 'none'
+		});
 	}
 
 	/**
@@ -582,7 +693,7 @@ class Slider extends Component {
 	 * @param {Object} $btn - button element.
 	 */
 	enableBtn($btn) {
-		$btn.removeClass(this.options.hiddenClass);
+		$btn.removeClass(this.options.classes.disabled);
 		$btn.prop('disabled', false);
 		$btn.removeAttr('aria-disabled');
 	}
@@ -593,7 +704,7 @@ class Slider extends Component {
 	 * @param {Object} $btn - button element.
 	 */
 	disableBtn($btn) {
-		$btn.addClass(this.options.hiddenClass);
+		$btn.addClass(this.options.classes.disabled);
 		$btn.prop('disabled', true);
 		$btn.attr('aria-disabled', true);
 	}
@@ -621,8 +732,7 @@ class Slider extends Component {
 			} else if (i > maxIndex) {
 				i = 0;
 			}
-		}
-		else {
+		} else {
 			this.enableBtn(this.$prev);
 			this.enableBtn(this.$next);
 
@@ -643,16 +753,18 @@ class Slider extends Component {
 			}
 		}
 
+		let prevIdx = this.index;
+		this.index = i;
+
 		this.animateSlide({
+			animate: !this.$el.hasClass(this.options.classes.unresolved),
 			idx: i,
-			animate: !this.$el.hasClass(this.options.unresolvedClass)
+			prevIdx: prevIdx
 		});
 
-		if (this.$el.hasClass(this.options.unresolvedClass)) {
-			this.$el.removeClass(this.options.unresolvedClass);
+		if (this.$el.hasClass(this.options.classes.unresolved)) {
+			this.$el.removeClass(this.options.classes.unresolved);
 		}
-
-		this.index = i;
 
 		this.handleActivity();
 
@@ -661,36 +773,31 @@ class Slider extends Component {
 		}
 	}
 
+	/**
+	 * Handle activity.
+	 */
 	handleActivity() {
-		this.$items.removeClass(this.options.activeClass);
+		this.$items.removeClass(this.options.classes.active);
 
 		if (!this.paginationDisabled && this.$paginationItems && this.$paginationItems.length) {
-			this.$paginationItems.removeClass(this.options.activeClass);
+			this.$paginationItems.removeClass(this.options.classes.active);
 		}
 
 		// If this slider instance isn't infinite
 		if (!this.infinite) {
 			for (let idx = this.index; idx < this.index + this.visibles; idx++) {
-
 				// First set active slide element(s)
-				this.$items
-					.eq(idx)
-					.addClass(this.options.activeClass);
+				this.$items.eq(idx).addClass(this.options.classes.active);
 
 				// Do that also for pagination element(s)
 				if (!this.paginationDisabled) {
-					this.$paginationItems
-						.eq(idx)
-						.addClass(this.options.activeClass);
+					this.$paginationItems.eq(idx).addClass(this.options.classes.active);
 				}
 			}
-		}
-		else {
+		} else {
 			for (let idx = this.index - 1; idx < this.index - 1 + this.visibles; idx++) {
 				let slideIdx = idx;
-				this.$items
-					.eq(slideIdx + 1)
-					.addClass(this.options.activeClass);
+				this.$items.eq(slideIdx + 1).addClass(this.options.classes.active);
 
 				if (!this.paginationDisabled) {
 					if (idx >= this.$paginationItems.length) {
@@ -701,9 +808,7 @@ class Slider extends Component {
 						slideIdx = this.$paginationItems.length - 1;
 					}
 
-					this.$paginationItems
-						.eq(slideIdx)
-						.addClass(this.options.activeClass);
+					this.$paginationItems.eq(slideIdx).addClass(this.options.classes.active);
 				}
 			}
 		}
@@ -749,7 +854,7 @@ class Slider extends Component {
 	 * Reset width styles
 	 */
 	resetStyles() {
-		this.$wrapper[ 0 ].removeAttribute('style');
+		this.$wrapper[0].removeAttribute('style');
 		this.$items.removeAttr('style');
 		this.$ribbon.removeAttr('style');
 	}

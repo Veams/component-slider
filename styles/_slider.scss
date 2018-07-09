@@ -60,7 +60,7 @@ Global Styles
 		left: 0;
 		position: relative;
 		transform: translate3d(0, 0, 0);
-		transition: left $slider-duration $slider-ease-method;
+		transition: transform $slider-duration $slider-ease-method;
 	}
 
 	.slider__item {

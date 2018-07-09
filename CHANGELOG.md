@@ -1,5 +1,9 @@
 ## Namespaced Versions
 
+### v1.1.0
+- Add drag-swipe on touch devices
+- Improve accessibility
+
 ### v1.0.2
 - Update README to escape handlebars syntax.
 
