@@ -62,7 +62,7 @@ The partial is a `\{{#wrapWith}}` helper. Documentation for [wrapWith](https://g
 
 ### `slider__list.hbs`
 
-The partial is a `{{#wrapWith}}` helper. Documentation for [wrapWith](https://github.com/Sebastian-Fitzner/mangony-hbs-helper-wrap-with) helper.
+The partial is a `\{{#wrapWith}}` helper. Documentation for [wrapWith](https://github.com/Sebastian-Fitzner/mangony-hbs-helper-wrap-with) helper.
 
 #### Settings
 
@@ -73,7 +73,7 @@ The partial is a `{{#wrapWith}}` helper. Documentation for [wrapWith](https://gi
 
 ### `slider__item.hbs`
 
-The partial is a `{{#wrapWith}}` helper. Documentation for [wrapWith](https://github.com/Sebastian-Fitzner/mangony-hbs-helper-wrap-with) helper.
+The partial is a `\{{#wrapWith}}` helper. Documentation for [wrapWith](https://github.com/Sebastian-Fitzner/mangony-hbs-helper-wrap-with) helper.
 
 -------------
 
